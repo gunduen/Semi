@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+	//숫자만 입력되게 하는 function
+	function checkInputNum(){
+    	if ((event.keyCode < 48) || (event.keyCode > 57)){
+       	 	event.returnValue = false;
+    	}
+	}
+	//주민등록번호가 올바른지에 대한 체크
+	function RrnValCheck(){
+		var num1 = document.getElementById("userRrnFirst");
+		var num2 = document.getElementById("userRrnSecond");
+		
+		var arrNum1 = new Array();
+		var arrNum2 = new Array();
+		
+		for(var i=0; i<num1.value.length;i++){
+			arrNum1[i] = num1.value.charAt(i);
+		}
+		for(var i=0; i<num2.value.length;i++){
+			arrNum2[i] = num2.value.charAt(i);
+		}
+		
+		var tempSum = 0;
+		for(var i=0; i<num1.value.length;i++){
+			tempSum += arrNum1[i] * (2+i);
+		}
+		
+		for(var i=0; i<num2.value.length-1;i++){
+			if(i>=2){
+				tempSum += arrNum2[i] * i;
+				
+			}else{
+				tempSum += arrNum2[i] * (8+i);
+			}
+		}
+		
+		if((11-(tempSum%11))%10 != arrNum2[6]){
+			alert('올바른 주민번호가 아닙니다. 다시 입력해주세요.');
+			num1.value="";
+			num2.value="";
+			num1.focus();
+			return false;
+		}else{
+			alert('올바른 주민번호입니다.');
+			document.getElementById("RrnCheck").value = "RrnCheck";
+		}
+		
+	}
+	//요소값을 입력하지않고 회원가입하기 버튼을 누르면 넘어가지 못하게하는 function
+	function checkValue(){
+		var driverInfo = document.driverEnrollForm;
+		
+		if(!driverInfo.userId.value){
+			alert('아아디를 입력해주세요.');
+			return false;
+		}
+		if(driverInfo.idCheck.value == "idUncheck"){
+			alert('아이디 중복체크란을 클릭해주세요.');
+			return false;
+		}
+		if(!driverInfo.userPwd.value){
+			alert('비밀번호를 입력해주세요.');
+			return false;
+		}
+		if(driverInfo.userPwd.value != driverInfo.userPwdChk.value){
+			alert('비밀번호가 다릅니다. 확인해주세요');
+			return false;
+		}
+		if(!driverInfo.userName.value){
+			alert('이름을 입력해주세요.');
+			return false;
+		}
+		if(!driverInfo.secondPhone.value || !driverInfo.thirdPhone.value){
+			alert('전화번호를 전부 입력해주세요.');
+			return false;
+		}
+		if(driverInfo.phoneCheck.value == "phoneUncheck"){
+			alert('휴대폰번호 중복체크를 해주세요.');
+			return false;
+		}
+		
+		if(!driverInfo.emailId.value){
+			alert('이메일 아이디를 입력해주세요.');
+			return false;
+		}
+		if(driverInfo.emailCheck.value=="emailUncheck"){
+			alert('이메일 중복확인을 해주세요.');
+			return false;
+		}
+		
+		if(!driverInfo.homeNum.value){
+			alert('집 주소를 등록해주세요.');
+			return false;
+		}
+		if(!driverInfo.userRrnFirst.value || !driverInfo.userRrnSecond.value){
+			alert('주민번호를 전부 입력해주세요.');
+			return false;
+		}
+		if(driverInfo.RrnCheck.value == "RrnUncheck"){
+			alert('주민번호 체크란을 클릭해주세요.');
+			return false;
+		}
+		if(!driverInfo.driverInfo.value){
+			alert('게시판에 올라갈 자기소개를 적어주세요.');
+			return false;
+		}
+		
+		
+		<!--LicenseFile,BLicenseFile ,DriverInfoFile  -->
+		if(!driverInfo.LicenseFile.value){
+			alert('택시운전자격증 사진을 첨부해주세요.');
+			return false;
+		}
+		if(!driverInfo.BLicenseFile.value){
+			alert('사업자등록증 사진을 첨부해주세요.');
+			return false;
+		}
+		if(!driverInfo.DriverInfoFile.value){
+			alert('자기소개용 사진을 첨부해주세요.');
+			return false;
+		}
+		
+	}
+	//아이디 중복확인 클릭시 창을 띄우는 fucntion
+	function openIdChk(){
+		window.name = "parentForm";
+		window.open("/login/DriverIdCheckForm.jsp", "chkForm","width=500, height=300, resizable=no, scrollbars=no");
+	}
+	
+	function openPhoneChk(){
+		window.name = "parentForm";
+		window.open("/login/DriverPhoneCheckForm.jsp", "chkForm", "width=500, height=300, resizable=no, scrollbars=no");
+	}
+	
+	function openEmailChk(){
+		window.name = "parentForm";
+		window.open("/login/DriverEmailCheckForm.jsp", "chkForm", "width=500, height=300, resizable=no scrollbars=no");
+	}
+	
+	//사용하기 버튼 누르기 전까지는 계속 idUncheck
+	function inputIdChk(){
+		document.driverEnrollForm.idCheck.value="idUncheck";
+	}
+	function inputPhoneChk(){
+		document.driverEnrollForm.phoneCheck.value="phoneUncheck";
+	}
+	function inputEmailChk(){
+		document.driverEnrollForm.emailCheck.value="emailUncheck";
+	}
+	//주소값 API
+	var roadAddress;
+	var homeNum;
+	function DaumPostCode(){
+		 new daum.Postcode({
+	            oncomplete: function(data) {
+	            	roadAddress = data.address;
+	            	homeNum = data.zonecode;	
+	            	$("#homeNum").val(homeNum);
+	            	$("#roadAddress").val(roadAddress);
+	            }
+	        }).open();
+	}
+	
+	function pwChk(){
+		var password = $("input[name='userPwd']").val();
+		var passwordChk = $("input[name='userPwdChk']").val();
+		if(password!=passwordChk){
+			$("#pw_chk").css("color","red");
+			$("#pw_chk").text('비밀번호가 다릅니다.');
+		}else if(password=='' && passwordChk==''){
+			$("#pw_chk").css("color","red");
+			$("#pw_chk").text('비밀번호를 입력해주세요.');
+		}else if(password == passwordChk){
+			$("#pw_chk").css("color","green");
+			$("#pw_chk").text('비밀번호가 일치합니다.');
+		}
+	}
+	
+</script>
+</head>
+<body>
+	<form action="/driver/enroll" name="driverEnrollForm" method="post" enctype="multipart/form-data" onsubmit="return checkValue();">
+	ID : <input type="text" name="userId" onkeydown="inputIdChk();"> <input type="button" value="중복확인" onclick="openIdChk();">
+	<input type="hidden" name="idCheck" value="idUncheck"><br>
+	PW : <input type="password" name="userPwd" onkeyup="pwChk();"><span id="pw_chk"></span><br>
+	PW 확인: <input type="password" name="userPwdChk" onkeyup="pwChk();"><br>
+	이름 : <input type="text" name="userName"><br>
+	
+	
+	휴대폰 번호  : <select name="firstPhone">
+		<option value="010">010</option>
+		<option value="010">016</option>
+		<option value="010">017</option>
+		<option value="010">019</option>
+	</select>
+	-<input type="text" size="4" name="secondPhone" id="secondPhone" onkeypress="javascript:checkInputNum();" onkeydown="inputPhoneChk();" maxlength="4">
+	-<input type="text" size="4" name="thirdPhone" id="thirdPhone" onkeypress="javascript:checkInputNum();" onkeydown="inputPhoneChk();" maxlength="4"><input type="button" value="중복확인" onclick="openPhoneChk();">
+	<input type="hidden" name="phoneCheck" value="phoneUncheck"><br>
+	
+	
+	이메일 주소 : <input type="text" name="emailId">@
+	<select name="emailTag" onkeydown="inputEmailChk();">
+		<option value="@naver.com">네이버</option>
+		<option value="@daum.net">다음</option>
+		<option value="@google.com">구글</option>
+		<option value="@iei.or.kr">kh정보교육원</option>
+	</select><input type="button" value="중복확인" onclick="openEmailChk();"><input type="hidden" name="emailCheck" value="emailUncheck"><br>
+	자택 주소 : <input type="text" id="homeNum" name ="homeNum" placeholder="우편번호"> 
+	<input type="button" onclick="DaumPostCode()" value="우편번호 찾기"><br>
+	<input type="text" id="roadAddress" name="roadAddress" placeholder="도로명주소">
+	<input type="text" id="dAddress" name="dAddress" placeholder="상세주소">
+	<br>담당 지역 : <select name="area">
+		<option value="서울">서울</option>
+		<option value="부산">부산</option>
+		<option value="대구">대구</option>
+		<option value="인천">인천</option>
+		<option value="광주">광주</option>
+		<option value="대전">대전</option>
+		<option value="울산">울산</option>
+		<option value="세종">세종</option>
+		<option value="경기">경기</option>
+		<option value="강원">강원</option>
+		<option value="충남">충남</option>
+		<option value="전북">전북</option>
+		<option value="전남">전남</option>
+		<option value="경북">경북</option>
+		<option value="경남">경남</option>
+		<option value="제주">제주</option>
+	</select><br>
+	주민등록번호 : <input type="text" id= "userRrnFirst" name="userRrnFirst" maxlength="6">-
+	<input type="password" id="userRrnSecond" name="userRrnSecond" maxlength="7"><input type="button" name="chk" value="검사" onclick="RrnValCheck();">
+	<input type="hidden"  id="RrnCheck" name="RrnCheck" value="RrnUncheck"><br>
+ 
+	자기소개 :<br> <textarea rows="10" cols="50" name="driverInfo" placeholder="자기소개를 입력해주세요"></textarea><br>
+
+	<script>
+		function checkSize(inputImage){
+			if(inputImage.files && inputImage.files[0].size> (3*1024*1024)){
+			alert('3MB를 초과합니다. 다시 확인해주세요');
+			inputImage.value=null;
+			}
+		}
+	</script>          
+
+ 	택시 운전 자격증(3MB) : <input type="file" name="LicenseFile" onchange="checkSize(this)"><br>
+	사업자등록증(3MB) : <input type="file" name="BLicenseFile" onchange="checkSize(this)"><br>
+	 소개용 사진(3MB) : <input type="file" name="DriverInfoFile" onchange="checkSize(this)"><br>
+
+	<input type="submit" value="회원가입하기"><br>
+
+	</form>
+
+</body>
+</html>
