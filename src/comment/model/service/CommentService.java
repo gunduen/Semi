@@ -11,6 +11,7 @@ import common.JDBCTemplate;
 
 public class CommentService {
 
+	
 	private JDBCTemplate factory;
 
 	public CommentService() {

@@ -11,6 +11,7 @@ import common.JDBCTemplate;
 
 public class CommentDAO {
 	
+	
 	public ArrayList<Comment> commentList(Connection conn, int currentPage, int recordCountPerPage, int reviewNo){
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;

@@ -38,6 +38,7 @@ public class CommentDeleteServlet extends HttpServlet {
 			response.sendRedirect("/review/select?reviewNo"+reviewNo);
 		} else {
 			response.sendRedirect("/review/reviewDetail.jsp");
+			
 		}
 	}
 
