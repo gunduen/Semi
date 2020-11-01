@@ -85,14 +85,16 @@
 					</c:if>
 					<td style="border: 1px solid black; width: 20%; position: relative">${comments.commentDate }</td>
 					<td style="border: 1px solid black; width: 100%;">${comments.commentContents }</td>
+					<c:if test="${comments.customerId eq sessionScope.customer.customer_Id }">
 					<td><button type="button" onClick="delComfunc();">삭제</button></td>
+					</c:if>
 				</tr>
 			</table>
 			<script>
 			function delComfunc() {
 				var con = confirm("정말로 삭제하시겠습니까?");
 				if (con) {
-					location.href="/comment/delete?commentNo="+${comments.commentNo};
+					location.href="/comment/delete?commentNo="+${comments.commentNo}+"&?reviewNo="+${reviewOne.reviewNo};
 				}
 			}
 			</script>

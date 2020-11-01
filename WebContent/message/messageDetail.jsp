@@ -174,6 +174,8 @@
 				작성일 : ${ detail.message_Date }</h6>
 			<h3>${ detail.message_Contents }</h3>
 		</article>
+		<br><br><br><br><br>
+		<div><button id="btn1" onclick="location.href='/message/delete?messageNo=${detail.message_No}'">삭제</button></div>
 	</section>
 
 	<footer>

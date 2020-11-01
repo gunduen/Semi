@@ -51,7 +51,8 @@ public class MessageReceiverListServlet extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher("/message/messageReceiverList.jsp");
 			view.forward(request, response);
 		} else {
-			response.sendRedirect("/message/detailError.html");
+			RequestDispatcher view = request.getRequestDispatcher("/message/messageReceiverList.jsp");
+			view.forward(request, response);
 		}
 	}
 

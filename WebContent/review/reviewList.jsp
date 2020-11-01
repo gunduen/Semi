@@ -146,6 +146,7 @@
 					<th>게시글</th>
 					<th>지역</th>
 					<th>날짜</th>
+					<th></th>
 				</tr>
 				<c:forEach items="${ RList }" var="review">
 				
@@ -168,11 +169,10 @@
 			</c:if>
 			<c:if test="${fn:length(rTravel) > 0}">
 				<!-- https://okky.kr/article/187911 -->
-				<c:if
-					test="${ sessionScope.customer ne null || ( sessionScope.driver ne null)}">
+				
 					<button type="button" id="btn1"
 						onclick="location.href='/review/form'">글쓰기</button>
-				</c:if>
+				
 			</c:if>
 		</section>
     <footer>

@@ -29,6 +29,7 @@ public class MessageDeleteServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int messageNo = Integer.parseInt(request.getParameter("messageNo"));
+		System.out.println(messageNo);
 		int result = new MessageService().deleteMessage(messageNo);
 		if( result > 0) {
 			response.sendRedirect("/message/list");

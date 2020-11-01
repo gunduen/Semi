@@ -88,9 +88,13 @@ public class ReviewListServlet extends HttpServlet {
 				request.setAttribute("rTravel", TList);
 				}
 				RequestDispatcher view = request.getRequestDispatcher("/review/reviewList.jsp");
-			view.forward(request, response);
-		} else {
-				response.sendRedirect("/review/reviewList.jsp");
+				view.forward(request, response);
+			} else {
+				if (!TList.isEmpty()) {
+					request.setAttribute("rTravel", TList);
+				}System.out.println(TList);
+				RequestDispatcher view = request.getRequestDispatcher("/review/reviewList.jsp");
+				view.forward(request, response);
 			}	
 	}
 

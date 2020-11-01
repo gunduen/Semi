@@ -30,10 +30,12 @@ public class CommentDeleteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int commentNo = Integer.parseInt(request.getParameter("commentNo"));
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
+		System.out.println(commentNo);
+		System.out.println(reviewNo);
 		int result = new CommentService().deleteComment(commentNo);
 		System.out.println(result);
 		if (result > 0) {
-			response.sendRedirect("/review/select?reviewNo="+reviewNo);
+			response.sendRedirect("/review/select?reviewNo"+reviewNo);
 		} else {
 			response.sendRedirect("/review/reviewDetail.jsp");
 		}

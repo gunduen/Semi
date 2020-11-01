@@ -214,7 +214,7 @@ body {
 						<th>받는 이</th>
 					</tr>
 					<c:forEach items="${ mList }" var="allmessage" varStatus="index">
-						<tr onClick="location.href='/message/select?messageNo=${Smessage.message_No}'">
+						<tr onClick="location.href='/message/select?messageNo=${allmessage.message_No}'">
 							<td>${ allmessage.sender }</td>
 							<td>${ allmessage.message_Subject}</td>
 							<td>${ allmessage.message_Date }</td>

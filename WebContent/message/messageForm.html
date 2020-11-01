@@ -152,8 +152,8 @@ footer {
 				<ul>
 					<li><a href="messageForm.html"><input type="submit"
 							value="쪽지 쓰기" class="btn1"></a></li>
-					<li><a href="#">받은 쪽지함</a></li>
-					<li><a href="#">보낸 쪽지함</a></li>
+					<li><a href="/message/receiverList?receiver=${ sessionScope.customer.customer_Id}">받은 쪽지함</a></li>
+					<li><a href="/message/senderList?sender=${ sessionScope.customer.customer_Id }">보낸 쪽지함</a></li>
 				</ul>
 			</div>
 		</article>

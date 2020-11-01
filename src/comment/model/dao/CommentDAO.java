@@ -158,4 +158,20 @@ public class CommentDAO {
 		return result;
 	}
 	
+	public int deleteAllComment(Connection conn, int reviewNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "DELETE FROM COMMENTS WHERE REVIEW_NO = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
 }

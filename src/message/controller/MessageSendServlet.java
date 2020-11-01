@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import customer.model.vo.Customer;
+import driver.model.vo.Driver;
 import message.model.service.MessageService;
 import message.model.vo.Message;
 
@@ -42,8 +43,17 @@ public class MessageSendServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession(); // session에서 userId 가져와야
 		if (session != null && (session.getAttribute("customer") != null)) {
-			
 			String userId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
+			int result = new MessageService().insertMessage(message, userId);
+			System.out.println(result);
+			if (result > 0) {
+				response.sendRedirect("/message/sendSuccess.html");
+			} else {
+				request.getRequestDispatcher("/message/sendError.html");
+			}
+		}
+		if (session != null && (session.getAttribute("driver") != null)) {
+			String userId = ((Driver)session.getAttribute("driver")).getDriverId();
 			int result = new MessageService().insertMessage(message, userId);
 			System.out.println(result);
 			if (result > 0) {

@@ -128,16 +128,15 @@
                <c:if test="${ rList eq null  }">
 				<form action="/review/insert" method="post">
 					<div class="message title">
-						제목 ${review.reviewNo } <input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요">
+						제목<input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요.">
 					</div>
 					<select name="area">
-					<c:forEach items="${ rTravel }" var="travel">
-					지역
-						<option value="${travel.package_Area }">${travel.package_Area } - '날짜 : ${ travel.package_TravelDate }'</option>
-					
-					</c:forEach>
-					</select>
-					<input type="hidden" name="reviewNo" >
+						<c:forEach items="${ rTravel }" var="travel">
+						지역<option value="${travel.package_Code }" selected>
+						${travel.package_Area }- '날짜 : ${ travel.package_TravelDate }'/'예약코드 ${travel.package_Code }'
+						</option>
+						</c:forEach>
+					</select> <input type="hidden" name="reviewNo" value="${review.reviewNo }">
 					<div class="message contents">
 						<textarea style="width: 1030px; height: 200px" name="contents" placeholder="내용을 입력해주세요"></textarea>
 					</div>
@@ -150,15 +149,16 @@
 				<c:if test="${ rList ne null }">
 				<form action="/review/update?reviewNo='${review.reviewNo }'" method="post">
 					<div class="message title">
-						제목 <input type="text" style="width: 1000px;" name="subject" value="안녕">
+						제목 <input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요.">
 					</div>
 					 <select name="area">
 					<c:forEach items="${ rTravel }" var="travel">
 					지역<option value="${travel.package_Area }">${travel.package_Area } - '날짜 : ${ travel.package_TravelDate }'</option>
-					
+						
 					</c:forEach>
 					</select>
 					<input type="hidden" name="reviewNo" value="${review.reviewNo }">
+					
 					<div class="message contents">
 						<textarea style="width: 1030px; height: 200px" name="contents" placeholder="내용을 입력해주세요">${review.reviewContents }</textarea>
 					</div>

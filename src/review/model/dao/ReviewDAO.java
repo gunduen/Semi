@@ -153,16 +153,17 @@ public class ReviewDAO {
 		   return reviewOne;
 	   }
 	   
-	   public int insertReview(Connection conn, String subject, String content, String customerId, String area) {
+	   public int insertReview(Connection conn, String subject, String content, String customerId, String area, int packageCode) {
 		   PreparedStatement pstmt = null;
 		   int result = 0;
-		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,0,SYSDATE,?,?)";
+		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,0,SYSDATE,?,?,?)";
 		   try {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, subject);
 			   pstmt.setString(2, content);
 			   pstmt.setString(3, area);
 			   pstmt.setString(4, customerId);
+			   pstmt.setInt(5, packageCode);
 			   result = pstmt.executeUpdate();
 		   } catch (SQLException e) {
 			   e.printStackTrace();
@@ -236,4 +237,6 @@ public class ReviewDAO {
 			
 			return RList;
 	   }
+
+	
 }

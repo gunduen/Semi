@@ -36,10 +36,12 @@ public class ReviewInsertServlet extends HttpServlet {
 		String subject = request.getParameter("subject");
 		String contents = request.getParameter("contents");
 		String area = request.getParameter("area");
+		int packageCode = Integer.parseInt(request.getParameter("packageCode"));
 		HttpSession session  = request.getSession();
 		if (session != null && (session.getAttribute("customer") != null)) {
 			String customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
-			int result = new ReviewService().insertReview(subject, contents, customerId, area);
+			System.out.println(customerId);
+			int result = new ReviewService().insertReview(subject, contents, customerId, area, packageCode);
 			if (result > 0) {
 				response.sendRedirect("/review/list?reviewArea=서울");
 			} else {
