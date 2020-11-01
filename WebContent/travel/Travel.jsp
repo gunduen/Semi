@@ -43,7 +43,7 @@ footer {
 <body>
 	<header></header>
 	<section>
-		<form name="form" action="/travel/pay.jsp" method="post">
+		<form name="form" action="/travel/insert" method="post">
 			<h1>예약하기</h1>
 			
 			<input id="addrSearchBtn" type="button" onclick="addSearch();"value="주소 검색"><br> 

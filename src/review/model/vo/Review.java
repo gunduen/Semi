@@ -13,7 +13,14 @@ public class Review {
 	private Date reviewDate;
 	private String customerId;
 	private String reviewArea;
+	private int packageCode;
 	
+	public int getPackageCode() {
+		return packageCode;
+	}
+	public void setPackageCode(int packageCode) {
+		this.packageCode = packageCode;
+	}
 	public int getReviewNo() {
 		return reviewNo;
 	}

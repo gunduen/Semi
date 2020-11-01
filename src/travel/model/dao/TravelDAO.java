@@ -76,16 +76,18 @@ public class TravelDAO {
 			rList = new ArrayList<Travel>();
 			while(rset.next()) {
 				Travel travel = new Travel();
-				travel.setPackage_Area(rset.getString("package_Area"));
-				travel.setPackage_Pickup(rset.getString("package_Pickup"));
-				travel.setPackage_TravelDate(rset.getString("package_TravelDate"));
-				travel.setPackage_Utilization(rset.getString("package_Utilization"));
-				travel.setDriver_Name(rset.getString("driver_Name"));
-				travel.setPackage_Code(rset.getInt("package_Code"));
-				travel.setCustomer_Id(rset.getString("customer_Id"));
-				travel.setDriver_Id(rset.getString("driver_Id"));
-				travel.setCoordx(rset.getString("coordx"));
-				travel.setCoordy(rset.getString("coordy"));
+				travel.setPackage_Code(rset.getInt("PACKAGE_CODE"));
+				travel.setPackage_Area(rset.getString("PACKAGE_AREA"));
+				travel.setPackage_Utilization(rset.getString("PACKAGE_UTILIZATION"));
+				travel.setPackage_Pickup(rset.getString("PACKAGE_PICKUP"));
+				travel.setPackage_Date(rset.getDate("PACKAGE_DATE"));
+				travel.setPackage_TravelDate(rset.getString("PACKAGE_TRAVELDATE"));
+				travel.setPakcage_Confirm(rset.getInt("PACKAGE_CONFIRM"));
+				travel.setCustomer_Id(rset.getString("CUSTOMER_ID"));
+				travel.setDriver_Name(rset.getString("DRIVER_NAME"));
+				travel.setDriver_Id(rset.getString("DRIVER_ID"));
+				travel.setCoordx(rset.getString("COORDX"));
+				travel.setCoordy(rset.getString("COORDY"));
 				rList.add(travel);
 			}
 		}catch(SQLException e) {

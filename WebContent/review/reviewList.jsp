@@ -150,17 +150,13 @@
 				<c:forEach items="${ RList }" var="review">
 				
 					<%-- <tr onClick="location.href='/review/select?reviewNo=${ review.reviewNo }'"> --%>
-					<tr onclick="selnumFunc(${review.reviewNo});">
+					<tr onclick="location.href='/review/select?reviewNo=${review.reviewNo}'">
 						<td>${review.customerId }</td>
 						<td>${review.reviewSubject }</td>
 						<td>${review.reviewArea }</td>
 						<td>${review.reviewDate }</td>
 					</tr>
-					<script>
-					 function selnumFunc() {
-						 location.href="/review/select?reviewNo="+ ${ review.reviewNo };
-					 }
-					</script>
+					
 				</c:forEach>
 				<tr>
 				<td colspan="4" align="center">${ pageNavi }

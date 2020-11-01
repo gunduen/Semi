@@ -11,12 +11,14 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 </head>
 <body>
-	<div>제목 : ${ review.reviewSubject }</div>
-	<div>내용 : ${ review.reviewContents }</div>
-	<div>작성자 : ${ review.customerId}</div>
-	<div>작성날짜 : ${review.reviewDate }</div>
+
+	<div>제목 : ${ reviewOne.reviewSubject }</div>
+	<div>내용 : ${ reviewOne.reviewContents }</div>
+	<div>작성자 : ${ reviewOne.customerId}</div>
+	<div>여행지역 : ${reviewOne.reviewArea }</div>
+	<div>작성날짜 : ${reviewOne.reviewDate }</div>
 	<c:if
-		test="${sessionScope.customer ne null && (sessionScope.customer.customer_Id eq review.customerId) }">
+		test="${sessionScope.customer ne null && (sessionScope.customer.customer_Id eq reviewOne.customerId) }">
 		<div>
 			<button type="button" onclick="delfunc();">삭제</button>
 			<button type="button" onclick="upfunc();">수정</button>
@@ -25,7 +27,7 @@
 	<hr>
 	<c:if
 		test="${ sessionScope.customer eq null && (sessionScope.driver eq null)}">
-		<form action="/comment/insert?reviewNo=${ review.reviewNo }">
+		<form action="/comment/insert?reviewNo=${ reviewOne.reviewNo }">
 			<div>댓글</div>
 			<textarea style="width: 100%; height: 50px" name="commentContents"
 				placeholder="로그인 후 이용해주세요" readonly></textarea>
@@ -37,13 +39,13 @@
 		<!-- 고객 댓글입니다!! -->
 		<c:if
 			test="${ (sessionScope.customer ne null) && (sessionScope.driver eq null)}">
-			<form action="/comment/insert?reviewNo=${ review.reviewNo }">
+			<form action="/comment/insert?reviewNo=${ reviewOne.reviewNo }">
 				<div>댓글</div>
 				<div>나의 아이디 ' ${ sessionScope.customer.customer_Id } '</div>
 				<input type="hidden" name="customerId" value="${ sessionScope.customer.customer_Id }"> 
 				<input type="hidden" name="driverId" value="${ sessionScope.driver.driverId }"> 
 				<input
-					type="hidden" name="reviewNo" value="${ review.reviewNo }">
+					type="hidden" name="reviewNo" value="${ reviewOne.reviewNo }">
 				<textarea style="width: 100%; height: 50px" name="commentContents"></textarea>
 				<div id="commentBtn">
 					<input type="submit" value="댓글입력">
@@ -53,13 +55,13 @@
 		<!-- 기사 댓글입니다.  -->
 		<c:if
 			test="${ (sessionScope.customer eq null) && (sessionScope.driver ne null)}">
-			<form action="/comment/insert?reviewNo=${ review.reviewNo }">
+			<form action="/comment/insert?reviewNo=${ reviewOne.reviewNo }">
 				<div>댓글</div>
 				<div>나의 아이디 ' ${ sessionScope.driver.driverId } '</div>
 				<input type="hidden" name="customerId" value="${ sessionScope.customer.customer_Id }"> 
 				<input type="hidden" name="driverId" value="${ sessionScope.driver.driverId }"> 
 				<input
-					type="hidden" name="reviewNo" value="${ review.reviewNo }">
+					type="hidden" name="reviewNo" value="${ reviewOne.reviewNo }">
 				<textarea style="width: 100%; height: 50px" name="commentContents"></textarea>
 				<div id="commentBtn">
 					<input type="submit" value="댓글입력">
@@ -81,12 +83,19 @@
 					<c:if test="${comments.customerId eq null }">
 					<td style="border: 1px solid black; width: 10%; float: left;">${comments.driverId }</td>
 					</c:if>
-					<td style="border: 1px solid black; width: 80%; position: relative">${comments.commentDate }</td>
+					<td style="border: 1px solid black; width: 20%; position: relative">${comments.commentDate }</td>
 					<td style="border: 1px solid black; width: 100%;">${comments.commentContents }</td>
+					<td><button type="button" onClick="delComfunc();">삭제</button></td>
 				</tr>
-
 			</table>
-		
+			<script>
+			function delComfunc() {
+				var con = confirm("정말로 삭제하시겠습니까?");
+				if (con) {
+					location.href="/comment/delete?commentNo="+${comments.commentNo};
+				}
+			}
+			</script>
 	</c:forEach>
 	<td colspan="3"align="center">${ pageNavi }</td>
 	<div></div>
@@ -96,13 +105,14 @@
 		function delfunc() {
 			var con = confirm("정말로 삭제하시겠습니까?");
 			if (con) {
-				location.href="/review/delete?reviewNo="+${review.reviewNo};
+				location.href="/review/delete?reviewNo="+${reviewOne.reviewNo};
 			}
 		}
 		
 		function upfunc() {
-			location.href="/review/form?reviewNo="+${review.reviewNo}
+			location.href="/review/form?reviewNo="+${reviewOne.reviewNo};
 		}
+		
 		
 	</script>
 </body>

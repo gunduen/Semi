@@ -10,11 +10,26 @@ public class Travel {
 	private String package_Pickup;
 	private String package_TravelDate;
 	private String customer_Id;
+	private int pakcage_Confirm;
 	private String driver_Name;
 	private Date package_Date;
 	private String driver_Id;
 	private String coordx;
 	private String coordy;
+	
+	
+
+
+	public int getPakcage_Confirm() {
+		return pakcage_Confirm;
+	}
+
+
+	public void setPakcage_Confirm(int pakcage_Confirm) {
+		this.pakcage_Confirm = pakcage_Confirm;
+	}
+
+
 	public int getPackage_Code() {
 		return package_Code;
 	}

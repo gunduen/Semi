@@ -35,6 +35,7 @@ public class ReviewDAO {
 				reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+				reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 				RList.add(reviewOne);
 			}
 		} catch(SQLException e) {
@@ -141,6 +142,7 @@ public class ReviewDAO {
 				   reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				   reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				   reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+				   reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 			   }
 		   }catch (SQLException e) {
 			   e.printStackTrace();

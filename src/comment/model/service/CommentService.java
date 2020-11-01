@@ -49,4 +49,18 @@ public class CommentService {
 		}
 		return result;
 	}
+	
+	public int deleteComment(int commentNo) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = factory.createConnection();
+			result = new CommentDAO().deleteComment(conn, commentNo);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
 }
