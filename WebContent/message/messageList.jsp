@@ -223,6 +223,7 @@ body {
 									onclick="click1(${allmessage.message_No})">삭제</button></td>
 						</tr>
 					</c:forEach>
+					
 					<tr>
 						<td colspan="5" align="center">${ pageNavi }
 					</tr>
