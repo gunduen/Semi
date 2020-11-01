@@ -34,7 +34,7 @@
 	
 	<c:if
 		test="${sessionScope.customer ne null || (sessionScope.driver ne null)}">
-		<!-- 고객 댓 -->
+		<!-- 고객 댓글입니다!! -->
 		<c:if
 			test="${ (sessionScope.customer ne null) && (sessionScope.driver eq null)}">
 			<form action="/comment/insert?reviewNo=${ review.reviewNo }">
