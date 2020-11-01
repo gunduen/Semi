@@ -140,6 +140,7 @@ public class CommentDAO {
 		   return result;
 	   }
 
+	
 	public int deleteComment(Connection conn, int commentNo) {
 		PreparedStatement pstmt = null;
 		int result = 0;

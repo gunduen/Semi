@@ -50,6 +50,7 @@ public class CommentService {
 		return result;
 	}
 	
+	
 	public int deleteComment(int commentNo) {
 		Connection conn = null;
 		int result = 0;
