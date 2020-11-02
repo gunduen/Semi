@@ -1,11 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+  	
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>admin - 기사 관리</title>
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+	function approveChk(){
+		var question = confirm('정말 승인 하시겠습니까?');
+		if(question){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	function kickOutChk(){
+		var question = confirm('정말 탈퇴 시겠습니까?');
+		if(question){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
+</script>
 </head>
 <body>
 <ul style="border:1px solid black;width:100px;list-style:none;padding:0;margin:0;">
@@ -16,7 +39,6 @@
 </ul>
 <table border="1px solid black">
 	<tr>
-		
 		<th>아이디</th>
 		<th>이름</th>
 		<th>이메일</th>
@@ -29,6 +51,7 @@
 		<th>사업자 등록증</th>
 		<th>소개용 사진</th>
 		<th>Button</th>
+		<th>강제 탈퇴</th>
 	</tr>
 	<c:forEach items="${ DList }" var="driverList">
 	 <tr>
@@ -52,11 +75,12 @@
 	 	<td><button type="button">승인 완료됨</button></td>
 	 	</c:if>	 
 	 	<c:if test="${driverList.driverCheck eq 0 }">
-	 	<td><button type="button">승인 하기</button></td>
+	 	<td><form action="/driver/approve?driverId=${driverList.driverId}" method="post" onsubmit="return approveChk();"><input type="submit" value="승인 하기"></form></td>
 	 	</c:if>
+	 	<td><form action="/driver/kickout?driverId=${driverList.driverId}" method="post" onsubmit="return kickOutChk();"><input type="submit" value="회원 탈퇴"></form></td>
 	 </tr>
 	 <script>
-	 	${".image"}.mouseover(function() {
+	 	$(".image").mouseover(function() {
 	 		$(this).css("color","lightgray");
 	 	});
 	 </script>

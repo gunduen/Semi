@@ -50,7 +50,7 @@ public class AdminDriverListServlet extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher("/admin/driver.jsp");
 			view.forward(request, response);
 		} else {
-			response.sendRedirect("/x.jsp");
+			response.sendRedirect("/admin/driver.jsp");
 		}
 	}
 

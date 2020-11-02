@@ -449,5 +449,41 @@ public class DriverDAO {
 	      }
 	      return recordTotalCount;
 	   }
+	   
+	   public int approveDriver(Connection conn, String userId) {
+		   int result=0;
+		   PreparedStatement pstmt = null;
+		   String query = "UPDATE DRIVER SET DRIVER_CHECK=1 WHERE DRIVER_ID=?";
+		   
+		   try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+		   } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		   }finally {
+			   JDBCTemplate.close(pstmt);
+		   }
+		   return result;
+	   }
+	   
+	   public int kickOut(Connection conn, String userId) {
+		   int result = 0;
+		   PreparedStatement pstmt = null;
+		   String query = "DELETE FROM DRIVER WHERE DRIVER_ID=?";
+		   try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		   
+		   return result;
+	   }
 	
 }
