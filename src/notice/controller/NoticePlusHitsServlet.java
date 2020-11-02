@@ -1,7 +1,6 @@
 package notice.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,19 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import notice.model.service.NoticeService;
 import notice.model.vo.Notice;
-import notice.model.vo.PageData;
 
 /**
- * Servlet implementation class NoticeListServlet
+ * Servlet implementation class NoticePlusHitsServlet
  */
-@WebServlet("/notice/list")
-public class NoticeListServlet extends HttpServlet {
+@WebServlet("/notice/plusHits")
+public class NoticePlusHitsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NoticeListServlet() {
+    public NoticePlusHitsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,29 +31,16 @@ public class NoticeListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int currentPage = 0;
-		if ( request.getParameter("currentPage") == null )
+		request.setCharacterEncoding("utf-8");
+		int notice_No = Integer.parseInt(request.getParameter("notice_No"));
+		int result = new NoticeService().plusHits(notice_No);
+		if(result > 0)
 		{
-			currentPage = 1;
+			response.sendRedirect("/notice/select?notice_No="+notice_No);
 		}
 		else
 		{
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		}
-		PageData pageData = new NoticeService().selectList(currentPage);
-		ArrayList<Notice> nList = pageData.getPageList();
-		int pageNum = pageData.getTotalCount() - (currentPage - 1)*pageData.getRecordCountPerPage();
-		if(!nList.isEmpty())
-		{
-			request.setAttribute("nList", nList);
-			request.setAttribute("pageNavi", pageData.getPageNavi());
-			request.setAttribute("pageNum", pageNum);
-			RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/views/notice/noticeList.jsp");
-			view.forward(request, response);
-		}
-		else
-		{	// 서비스 요청이 실패했을 때
-			request.getRequestDispatcher("/WEB-INF/views/notice/noticeError.html").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/notice/noticeError.html");
 		}
 	}
 

@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,9 +84,6 @@
                     <c:forEach items="${ nList }" var="notice" varStatus="status">
 	                    <tr id="check" onClick="location.href='/notice/plusHits?notice_No=${ notice.notice_No }'">
 	                        <td>${ pageNum-status.index }</td>
-								<%-- <td>
-	    							${notice.totalCount - (notice.currentPage-1)*notice.countPerPage-i.index}
-								</td> --%>
 	                        <td>${ notice.notice_Subject }</td>
 	                        <td>${ notice.customer_Id }</td>
 	                        <td>${ notice.notice_Date }</td>
@@ -102,13 +96,17 @@
             	<form class="pagination">
             		${ pageNavi }
             	</form>
-            	<c:if test="${ sessionScope.customer.adminCheck == 1 }">
-	            	<a href="/notice/writeform"><input id="noticeWrite" type="submit" value="글쓰기" name="글쓰기"></a>
-		        </c:if>
+	            	<c:if test="${ sessionScope.customer.adminCheck == 1 }">
+		            	<a href="/notice/writeform"><input id="noticeWrite" type="submit" value="글쓰기" name="글쓰기"></a>
+			        </c:if>
             </article>
             <br><br>
             <article>
             	<form action="/notice/search" method="get">
+            		<!-- <select>
+	                    <option>제목</option>
+	                    <option>내용</option>
+                	</select> -->
             		<input type="text" name="search" size="50" placeholder="검색어를 입력하세요">
             		<input type="submit" value="검색">
             	</form>

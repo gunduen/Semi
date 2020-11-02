@@ -14,44 +14,8 @@ public class NoticeDAO
 {
 	public NoticeDAO() {}
 	
-//	public ArrayList<Notice> selectList(Connection conn)
-//	{
-//		ArrayList<Notice> list = null;
-//		Statement stmt = null;
-//		ResultSet rset = null;
-//		String query = "SELECT * FROM NOTICE ORDER BY NOTICE_NO DESC";
-//		
-//		try
-//		{
-//			stmt = conn.createStatement();
-//			rset = stmt.executeQuery(query);
-//			list = new ArrayList<Notice>();
-//			while(rset.next())
-//			{
-//				Notice nlist = new Notice();
-//				nlist.setNotice_No(rset.getInt("NOTICE_NO"));
-//				nlist.setCustomer_Id(rset.getString("CUSTOMER_ID"));
-//				nlist.setNotice_Date(rset.getDate("NOTICE_DATE"));
-//				nlist.setNotice_Hits(rset.getInt("NOTICE_HITS"));
-//				nlist.setNotice_Subject(rset.getString("NOTICE_SUBJECT"));
-//				nlist.setNotice_Contents(rset.getString("NOTICE_CONTENTS"));
-//				list.add(nlist);
-//			}
-//		}
-//		catch (SQLException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		finally
-//		{
-//			JDBCTemplate.close(rset);
-//			JDBCTemplate.close(stmt);
-//		}
-//		return list;
-//	}
 	public ArrayList<Notice> selectList(Connection conn, int currentPage, int recordCountPerPage)
 	{
-		// Statement stmt = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		ArrayList<Notice> nList = null;
@@ -63,6 +27,8 @@ public class NoticeDAO
 		// 다시말해, 1페이지면 1, 10의 값이 2페이지면 11, 20의 값이 들어가도록 수식을 만들어줘야 함.
 		// NOTICE.* = SUBJECT, CONTENTS, USERID, REGDATE, NOTICENO
 		String query = "SELECT * FROM (SELECT NOTICE.*, ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS NUM FROM NOTICE) WHERE NUM BETWEEN ? AND ?";
+		// SELECT * FROM ((SELECT NOTICE.*, ROWNUM AS NUM FROM NOTICE) ORDER BY NOTICE_NO DESC) WHERE NUM BETWEEN ? AND ? ORDER BY NUM DESC;
+		// SELECT * FROM (SELECT NOTICE.*, ROWNUM AS NUM FROM NOTICE) ORDER BY NOTICE_NO DESC;
 		
 		// 현재 페이지 : 1, 한 페이지 당 보여줄 게시물의 갯수 : 10
 		// start : 1, end : 10
@@ -74,18 +40,16 @@ public class NoticeDAO
 		int end = currentPage*recordCountPerPage;
 		try
 		{
-			// stmt = conn.createStatement();
-			// rset = stmt.executeQuery(query);
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, start);
 			pstmt.setInt(2, end);
 			rset = pstmt.executeQuery();
 			nList = new ArrayList<Notice>();
 			while(rset.next())
-			{	// 여기에서 사용하는 noticeOne 객체는 nList에
-				// 데이터를 저장하기 위해 사용하는 도구
+			{	
 				Notice noticeOne = new Notice();
 				noticeOne.setNotice_No(rset.getInt("NOTICE_NO"));
+//				noticeOne.setNum(rset.getInt("NUM"));
 				noticeOne.setNotice_Subject(rset.getString("NOTICE_SUBJECT"));
 				noticeOne.setCustomer_Id(rset.getString("CUSTOMER_ID"));						
 				noticeOne.setNotice_Date(rset.getDate("NOTICE_DATE"));
@@ -100,7 +64,6 @@ public class NoticeDAO
 		finally
 		{
 			JDBCTemplate.close(rset);
-			//JDBCTemplate.close(stmt);
 			JDBCTemplate.close(pstmt);
 		}
 		return nList;
@@ -261,6 +224,155 @@ public class NoticeDAO
 			JDBCTemplate.close(pstmt);
 		}
 		return notice;
+	}
+	
+	public int plusHits(Connection conn, int notice_No)
+	{
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "UPDATE NOTICE SET NOTICE_HITS = (NOTICE_HITS + 1) WHERE NOTICE_NO = ?";
+		try
+		{
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, notice_No);
+			result = pstmt.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
+	public ArrayList<Notice> noticeSearchList(Connection conn, String search, int currentPage, int recordCountPerPage)
+	{
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "SELECT * FROM (SELECT NOTICE.*, ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS NUM FROM NOTICE WHERE NOTICE_SUBJECT LIKE ?) WHERE NUM BETWEEN ? AND ?";
+		ArrayList<Notice> nList = null;
+		int start = currentPage*recordCountPerPage - ( recordCountPerPage - 1 );
+		int end = currentPage*recordCountPerPage;
+		try
+		{
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+search+"%");
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
+			rset = pstmt.executeQuery();
+			nList = new ArrayList<Notice>();
+			while(rset.next())
+			{
+				Notice notice = new Notice();
+				notice.setNotice_No(rset.getInt("NOTICE_NO"));
+				notice.setNotice_Subject(rset.getString("NOTICE_SUBJECT"));
+				notice.setNotice_Contents(rset.getString("NOTICE_CONTENTS"));
+				notice.setCustomer_Id(rset.getString("CUSTOMER_ID"));
+				notice.setNotice_Date(rset.getDate("NOTICE_DATE"));
+				notice.setNotice_Hits(rset.getInt("NOTICE_HITS"));
+				nList.add(notice);
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return nList;
+	}
+	
+	public String getSearchPageNavi(Connection conn, int currentPage, int recordCountPerPage, int naviCountPerPage, String search)
+	{
+		int recordTotalCount = searchTotalCount(conn, search);
+		int pageTotalCount = 0;
+		if ( recordTotalCount % recordCountPerPage > 0 )
+		{
+			pageTotalCount = recordTotalCount / recordCountPerPage + 1;
+		}
+		else
+		{
+			pageTotalCount = recordTotalCount / recordCountPerPage;
+		}
+		if(currentPage < 1)
+		{
+			currentPage = 1;
+		}
+		else if(currentPage > pageTotalCount)
+		{
+			currentPage = pageTotalCount;
+		}
+		int startNavi = ((currentPage - 1) / naviCountPerPage) * naviCountPerPage + 1;
+		int endNavi = startNavi + naviCountPerPage - 1;
+		if(endNavi > pageTotalCount)
+		{
+			endNavi = pageTotalCount;
+		}
+		boolean needPrev = true;
+		boolean needNext = true;
+		if(  startNavi == 1 )
+		{
+			needPrev = false;
+		}
+		if( endNavi == pageTotalCount )
+		{
+			needNext = false;
+		}
+		StringBuilder sb = new StringBuilder();
+		if( needPrev )
+		{
+			sb.append("<a href='/notice/search?search="+search+"&currentPage="+(startNavi-1)+"'> < </a>");
+		}
+		for ( int i = startNavi; i <= endNavi; i++ )
+		{
+			if( i == currentPage )
+			{
+				sb.append("<a href='/notice/search?search="+search+"&currentPage="+i+"'><b> "+i+" </b></a>");
+			}
+			else
+			{
+				sb.append("<a href='/notice/search?search="+search+"&currentPage="+i+"'> "+i+" </a>");
+			}
+		}
+		if( needNext )
+		{
+			sb.append("<a href='/notice/search?search="+search+"&currentPage="+(endNavi+1)+"'> > </a>");
+		}
+		return sb.toString();
+	}
+	
+	public int searchTotalCount(Connection conn, String search)
+	{
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "SELECT COUNT(*) AS TOTALCOUNT FROM NOTICE WHERE NOTICE_SUBJECT LIKE ?";
+		int recordTotalCount = 0;
+		try
+		{
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+search+"%");
+			rset = pstmt.executeQuery();
+			if(rset.next())
+			{
+				recordTotalCount = rset.getInt("TOTALCOUNT");
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return recordTotalCount;
 	}
 	
 	public int insertNotice(Connection conn, String notice_Subject, String notice_Contents, String customer_Id)
