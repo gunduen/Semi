@@ -33,10 +33,11 @@ public class QnaDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		int qnaNo = Integer.parseInt(request.getParameter("qnaNoticeNo"));
+		String replyCheck = request.getParameter("replyCheck");
 		QnaNotice qna = new QnaService().selectQna(qnaNo);
 		if (qna != null) {
 			request.setAttribute("content", qna);
-			RequestDispatcher view = request.getRequestDispatcher("/qna/replylist");
+			RequestDispatcher view = request.getRequestDispatcher("/qna/replylist?replyCheck="+replyCheck);
 			view.forward(request, response);
 		}if(qna==null) {
 			RequestDispatcher view = request.getRequestDispatcher("/qna/list");

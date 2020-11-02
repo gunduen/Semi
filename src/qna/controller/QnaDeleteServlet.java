@@ -1,6 +1,8 @@
 package qna.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,12 +30,13 @@ public class QnaDeleteServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		int qnaNo = Integer.parseInt(request.getParameter("qnaNo"));
 		int result = new QnaService().deleteQna(qnaNo);
 		if (result > 0) {
 			response.sendRedirect("/qna/list");
 		}else {
-			// 공지사항 서비스 요청 실패 페이지
+			
 		}
 	}
 

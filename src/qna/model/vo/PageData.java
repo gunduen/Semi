@@ -6,6 +6,8 @@ public class PageData {
 	
 	private ArrayList<QnaNotice> pageList;
 	private String pageNavi;
+	private int totalCount;
+	private int recordCountPerPage;
 	
 	public PageData() {}
 
@@ -24,4 +26,21 @@ public class PageData {
 	public void setPageNavi(String pageNavi) {
 		this.pageNavi = pageNavi;
 	}
+	
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public int getRecordCountPerPage() {
+		return recordCountPerPage;
+	}
+
+	public void setRecordCountPerPage(int recordCountPerPage) {
+		this.recordCountPerPage = recordCountPerPage;
+	}
+	
 }

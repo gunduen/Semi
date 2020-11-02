@@ -38,12 +38,13 @@ public class QnaReplyServlet extends HttpServlet {
 		int qnaNo = Integer.parseInt(request.getParameter("qnaNoticeNo"));
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
+		String replyCheck = request.getParameter("replyCheck");
 		HttpSession session = request.getSession();
 		
 		if (session != null && (session.getAttribute("customer") != null)) {
 			int result = new QnaService().insertReply(subject, content, qnaNo);
 			if (result > 0) {
-				response.sendRedirect("/qna/detail?qnaNoticeNo="+qnaNo);
+				response.sendRedirect("/qna/detail?qnaNoticeNo="+qnaNo+"&replyCheck="+replyCheck);
 			}
 			else {
 				// 답변 업로드 실패 시 출력하는 메시지

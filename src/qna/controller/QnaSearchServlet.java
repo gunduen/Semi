@@ -41,11 +41,14 @@ public class QnaSearchServlet extends HttpServlet {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 		}
 		String search = request.getParameter("search");
-		PageData pageData = new QnaService().selectSearch(search, currentPage);
+		String type = request.getParameter("type");
+		PageData pageData = new QnaService().selectSearch(search, currentPage, type);
 		ArrayList<QnaNotice> qList = pageData.getPageList();
+		int pageNum = pageData.getTotalCount() - (currentPage -1) * pageData.getRecordCountPerPage();
 		if (!qList.isEmpty()) {
 			request.setAttribute("qList", qList);
 			request.setAttribute("pageNavi", pageData.getPageNavi());
+			request.setAttribute("pageNum", pageNum);
 			RequestDispatcher view = request.getRequestDispatcher("/qna/qnaSearch.jsp");
 			view.forward(request, response);
 		}else {

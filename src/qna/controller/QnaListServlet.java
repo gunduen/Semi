@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.View;
 
-
+import qna.model.dao.QnaDAO;
 import qna.model.service.QnaService;
 import qna.model.vo.PageData;
 import qna.model.vo.QnaNotice;
@@ -43,9 +43,12 @@ public class QnaListServlet extends HttpServlet {
 		}
 		PageData pageData = new QnaService().selectQnaList(currentPage);
 		ArrayList<QnaNotice> qList = pageData.getPageList();
+		int pageNum = pageData.getTotalCount() - (currentPage -1) * pageData.getRecordCountPerPage();
 		if(!qList.isEmpty()) {
 			request.setAttribute("qList", qList);
 			request.setAttribute("pageNavi", pageData.getPageNavi());
+			request.setAttribute("pageNum", pageNum);
+			// 전체게시글갯수, 현재페이지, 페이지당 보여줄 게시글 갯수
 			RequestDispatcher qna = request.getRequestDispatcher("/qna/qnaList.jsp");
 			qna.forward(request, response);
 		}else {

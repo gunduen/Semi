@@ -125,10 +125,18 @@ public class QnaDAO {
 		return recordTotalCount;
 	}
 	
-	public ArrayList<QnaNotice> QnaNoticeSearchList(Connection conn, String search, int currentPage, int recordCountPerPage) {
+	public ArrayList<QnaNotice> QnaNoticeSearchList(Connection conn, String search, int currentPage, int recordCountPerPage, String type) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "SELECT * FROM (SELECT QNANOTICE.*, ROW_NUMBER() OVER(ORDER BY QNANOTICE_NO DESC) AS NUM FROM QNANOTICE WHERE QNANOTICE_SUBJECTS LIKE ?) WHERE NUM BETWEEN ? AND ?";
+		String query = null;
+		
+		if(type.equals("QNANOTICE_SUBJECTS")) {
+			query = "SELECT * FROM (SELECT QNANOTICE.*, ROW_NUMBER() OVER(ORDER BY QNANOTICE_NO DESC) AS NUM FROM QNANOTICE WHERE QNANOTICE_SUBJECTS LIKE ?) WHERE NUM BETWEEN ? AND ?"; 
+		}else if(type.equals("QNANOTICE_CONTENTS")) {
+			query = "SELECT * FROM (SELECT QNANOTICE.*, ROW_NUMBER() OVER(ORDER BY QNANOTICE_NO DESC) AS NUM FROM QNANOTICE WHERE QNANOTICE_CONTENTS LIKE ?) WHERE NUM BETWEEN ? AND ?";
+		}else if(type.equals("CUSTOMER_ID")) {
+			query = "SELECT * FROM (SELECT QNANOTICE.*, ROW_NUMBER() OVER(ORDER BY QNANOTICE_NO DESC) AS NUM FROM QNANOTICE WHERE CUSTOMER_ID LIKE ?) WHERE NUM BETWEEN ? AND ?";
+		}
 		ArrayList<QnaNotice> qList = null;
 		int start = currentPage*recordCountPerPage - (recordCountPerPage - 1);
 		int end = currentPage*recordCountPerPage;
@@ -161,8 +169,8 @@ public class QnaDAO {
 	}
 	
 	public String getSearchPageNavi(Connection conn, int currentPage, 
-			int recordCountPerPage, int naviCountPerPage, String search) {
-		int recordTotalCount = searchTotalCount(conn, search);
+			int recordCountPerPage, int naviCountPerPage, String search, String type) {
+		int recordTotalCount = searchTotalCount(conn, search, type);
 		int pageTotalCount = 0;
 		if (recordTotalCount % recordCountPerPage > 0) {
 			pageTotalCount = recordTotalCount / recordCountPerPage + 1;
@@ -192,26 +200,33 @@ public class QnaDAO {
 		}
 		StringBuilder sb = new StringBuilder();
 		if (needPrev) {
-			sb.append("<a href='/qna/search?search="+search+"&currentPage="+(startNavi-1)+"'> < </a>");
+			sb.append("<a href='/qna/search?type="+type+"&search="+search+"&currentPage="+(startNavi-1)+"'> < </a>");
 		}
 		for (int i = startNavi; i <= endNavi; i++) {
 			if (i == currentPage) {
-				sb.append("<a href='/qna/search?search="+search+"&currentPage="+i+"'><b> "+ i + " </b></a>");
+				sb.append("<a href='/qna/search?type="+type+"&search="+search+"&currentPage="+i+"'><b> "+ i + " </b></a>");
 			}else {
-				sb.append("<a href='/qna/search?search="+search+"&currentPage="+i+"'> "+ i + " </a>");
+				sb.append("<a href='/qna/search?type="+type+"&search="+search+"&currentPage="+i+"'> "+ i + " </a>");
 			}
 		}
 		if (needNext) {
-			sb.append("<a href='/qna/search?search="+search+"&currentPage="+(endNavi+1)+"'> > </a>");
+			sb.append("<a href='/qna/search?type="+type+"&search="+search+"&currentPage="+(endNavi+1)+"'> > </a>");
 		}
 		return sb.toString();
 	}
 	
-	public int searchTotalCount(Connection conn, String search) {
+	public int searchTotalCount(Connection conn, String search, String type) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		// 게시글의 총 개수를 알아오는 쿼리
-		String query = "SELECT COUNT(*) AS TOTALCOUNT FROM QNANOTICE WHERE QNANOTICE_SUBJECTS LIKE ?";
+		String query = null;
+		// 검색했을때 게시글의 총 개수를 알아오는 쿼리
+		if (type.equals("QNANOTICE_SUBJECTS")) {
+			query = "SELECT COUNT(*) AS TOTALCOUNT FROM QNANOTICE WHERE QNANOTICE_SUBJECTS LIKE ?";
+		}else if(type.equals("QNANOTICE_CONTENTS")) {
+			query = "SELECT COUNT(*) AS TOTALCOUNT FROM QNANOTICE WHERE QNANOTICE_CONTENTS LIKE ?";
+		}else {
+			query = "SELECT COUNT(*) AS TOTALCOUNT FROM QNANOTICE WHERE CUSTOMER_ID LIKE ?";
+		}
 		int recordTotalCount = 0;
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -378,10 +393,15 @@ public class QnaDAO {
 		return answer;
 	}
 	
-	public int updateCheck(Connection conn, int qnaNo) {
+	public int updateCheck(Connection conn, int qnaNo,String checkReply) {
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String query = "UPDATE QNANOTICE SET QNANOTICE_CHECK = '완료' WHERE QNANOTICE_NO = ?";
+		String query = null;
+		if(checkReply.equals("wait")) {
+			query = "UPDATE QNANOTICE SET QNANOTICE_CHECK = '대기' WHERE QNANOTICE_NO = ?";
+		}else {
+			query = "UPDATE QNANOTICE SET QNANOTICE_CHECK = '완료' WHERE QNANOTICE_NO = ?";
+		}
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, qnaNo);
@@ -394,10 +414,71 @@ public class QnaDAO {
 		return result;
 	}
 	
+	
+	public int updateReply(Connection conn, String subject, String content, int qnaNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "UPDATE ANSWER SET ANSWER_TITLE = ?, ANSWER_CONTENTS = ? WHERE QNANOTICE_NO = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, subject);
+			pstmt.setString(2, content);
+			pstmt.setInt(3, qnaNo);
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
+	public int deleteReply(Connection conn, int qnaNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "DELETE FROM ANSWER WHERE QNANOTICE_NO = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, qnaNo);
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int updateHits(Connection conn, int qnaNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "UPDATE QNANOTICE SET QNANOTICE_HITS = QNANOTICE_HITS + 1 WHERE QNANOTICE_NO = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, qnaNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
+	
+	
 //  기존 게시물 찾기 코드 (저번에 실습했던 페이징 기능 있는 찾기 코드 사용중)
 //	public ArrayList<QnaNotice> selectSearch(Connection conn, String search, String type) {
 //		PreparedStatement pstmt = null;
 //		ResultSet rset = null;
+//		String query = "SELECT * FROM QNANOTICE WHERE ? LIKE ? ORDER BY QNANOTICE_NO DESC";
+//		if ( type.equals("QNANOTICE_CONTENTS")) {
+//			query = "SELECT * FROM QNANOTICE WHERE QNANOTICE_CONTENTS LIKE ? ORDER BY QNANOTICE_NO DESC";
+//		}else if( type.equals("CUSTOMER_ID")) {
+//			query = "";
+//		}
 //		String query = "SELECT * FROM QNANOTICE WHERE ? LIKE ? ORDER BY QNANOTICE_NO DESC";
 //		ArrayList<QnaNotice> qList = null;
 //		try {

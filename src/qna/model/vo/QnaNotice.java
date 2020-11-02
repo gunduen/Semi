@@ -12,9 +12,9 @@ public class QnaNotice {
 	private String qnaNoticeCheck;
 	private String driverId;
 	private String customerId;
+	private int totalCount;
 	private int currentPage;
-	private int recordTotalCount;
-	private int naviCountPerPage;
+	private int recordCountPerPage;
 	
 	public QnaNotice () {}
 
@@ -83,6 +83,14 @@ public class QnaNotice {
 		this.customerId = customerId;
 	}
 
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+
 	public int getCurrentPage() {
 		return currentPage;
 	}
@@ -91,20 +99,12 @@ public class QnaNotice {
 		this.currentPage = currentPage;
 	}
 
-	public int getRecordTotalCount() {
-		return recordTotalCount;
+	public int getRecordCountPerPage() {
+		return recordCountPerPage;
 	}
 
-	public void setRecordTotalCount(int recordTotalCount) {
-		this.recordTotalCount = recordTotalCount;
-	}
-
-	public int getNaviCountPerPage() {
-		return naviCountPerPage;
-	}
-
-	public void setNaviCountPerPage(int naviCountPerPage) {
-		this.naviCountPerPage = naviCountPerPage;
+	public void setRecordCountPerPage(int recordCountPerPage) {
+		this.recordCountPerPage = recordCountPerPage;
 	}
 	
 }

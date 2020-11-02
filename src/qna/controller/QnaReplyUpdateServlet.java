@@ -1,8 +1,6 @@
 package qna.controller;
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,19 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import qna.model.service.QnaService;
-import qna.model.vo.QnaNotice;
 
 /**
- * Servlet implementation class QnaUpdateReplyServlet
+ * Servlet implementation class QnaReplyUpdateServlet
  */
 @WebServlet("/qna/replyupdate")
-public class QnaUpdateReplyServlet extends HttpServlet {
+public class QnaReplyUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public QnaUpdateReplyServlet() {
+    public QnaReplyUpdateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,16 +28,15 @@ public class QnaUpdateReplyServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 관리자 답변 여부 업데이트하는 서블릿 (대기 -> 완료)
 		request.setCharacterEncoding("utf-8");
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
 		int qnaNo = Integer.parseInt(request.getParameter("qnaNoticeNo"));
-		int result = new QnaService().updateCheck(qnaNo);
+		int result = new QnaService().updateReply(subject, content, qnaNo);
 		if (result > 0) {
-			RequestDispatcher view = request.getRequestDispatcher("/qna/qnaDetail.jsp");
-			view.forward(request, response);
-		} if(result == 0) {
-			RequestDispatcher view = request.getRequestDispatcher("/qna/list");
-			view.forward(request, response);
+			response.sendRedirect("/qna/detail?qnaNoticeNo="+qnaNo);
+		}else {
+			request.getRequestDispatcher("/qna/qnaError.html");
 		}
 	}
 

@@ -27,6 +27,8 @@ public class QnaService {
 			conn = factory.createConnection();
 			pd.setPageList(new QnaDAO().selectQnaList(conn, currentPage, recordCountPerPage));
 			pd.setPageNavi(new QnaDAO().getPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage));
+			pd.setTotalCount(new QnaDAO().totalCount(conn));
+			pd.setRecordCountPerPage(recordCountPerPage);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -128,15 +130,17 @@ public class QnaService {
 		return result;
 	}
 	
-	public PageData selectSearch(String search, int currentPage) {
+	public PageData selectSearch(String search, int currentPage, String type) {
 		Connection conn = null;
 		PageData pd = new PageData();
 		int recordCountPerPage = 10;
 		int naviCountPerPage = 10;
 		try {
 			conn = factory.createConnection();
-			pd.setPageList(new QnaDAO().QnaNoticeSearchList(conn, search, currentPage, recordCountPerPage));
-			pd.setPageNavi(new QnaDAO().getSearchPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage, search));
+			pd.setPageList(new QnaDAO().QnaNoticeSearchList(conn, search, currentPage, recordCountPerPage, type));
+			pd.setPageNavi(new QnaDAO().getSearchPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage, search, type));
+			pd.setTotalCount(new QnaDAO().searchTotalCount(conn, search, type));
+			pd.setRecordCountPerPage(recordCountPerPage);
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -178,12 +182,12 @@ public class QnaService {
 		return answer;
 	}
 	
-	public int updateCheck(int qnaNo) {
+	public int updateCheck(int qnaNo,String checkReply) {
 		int result = 0;
 		Connection conn = null;
 		try {
 			conn = factory.createConnection();
-			result = new QnaDAO().updateCheck(conn, qnaNo);
+			result = new QnaDAO().updateCheck(conn, qnaNo,checkReply);
 			if (result > 0) {
 				JDBCTemplate.commit(conn);
 			}else {
@@ -196,4 +200,62 @@ public class QnaService {
 		}
 		return result;
 	}
+	
+	public int updateReply(String subject, String content, int qnaNo) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn = factory.createConnection();
+			result = new QnaDAO().updateReply(conn, subject, content, qnaNo);
+			if (result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int deleteReply(int qnaNo) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn = factory.createConnection();
+			result = new QnaDAO().deleteReply(conn, qnaNo);
+			if (result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int updateHits(int qnaNo) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn = factory.createConnection();
+			result = new QnaDAO().updateHits(conn, qnaNo);
+			if (result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
 }
