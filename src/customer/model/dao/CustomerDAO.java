@@ -398,4 +398,22 @@ public class CustomerDAO {
 	      }
 	      return recordTotalCount;
 	   }
+	   
+	   public int kickOut(Connection conn, String userId) {
+		   PreparedStatement pstmt = null;
+		   String query = "DELETE FROM CUSTOMER WHERE CUSTOMER_ID=?";
+		   
+		   int result = 0;
+		   try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		   return result;
+	   }
 }

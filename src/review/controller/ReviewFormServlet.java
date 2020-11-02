@@ -42,7 +42,6 @@ public class ReviewFormServlet extends HttpServlet {
 //		review.setReviewSubject(request.getParameter("reviewSubject"));
 //		review.setReviewContents(request.getParameter("reviewContents"));
 //		review.setReviewArea(request.getParameter("reviewArea"));
-//		
 		HttpSession session = request.getSession();
 		String customerId = null;
 		
@@ -53,8 +52,11 @@ public class ReviewFormServlet extends HttpServlet {
 		} else {
 			customerId = null;
 		}
+		
 		ArrayList<Travel> TList = new TravelService().selectTravelList(customerId);
 		ArrayList<Review> RList = new ReviewService().reviewBeList(customerId);
+		System.out.println(TList);
+		System.out.println(RList);
 		
 		if (!TList.isEmpty()) {
 			request.setAttribute("rTravel", TList);

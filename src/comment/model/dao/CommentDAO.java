@@ -11,6 +11,7 @@ import common.JDBCTemplate;
 
 public class CommentDAO {
 	
+	
 	public ArrayList<Comment> commentList(Connection conn, int currentPage, int recordCountPerPage, int reviewNo){
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -28,8 +29,8 @@ public class CommentDAO {
 			while(rset.next()) {
 				Comment cOne = new Comment();
 				cOne.setCommentNo(rset.getInt("COMMENT_NO"));
+				cOne.setCommentContents(rset.getString("COMMENT_COMMENTS"));
 				cOne.setCommentDate(rset.getDate("COMMENT_DATE"));
-				cOne.setCommentContents(rset.getString("COMMENT_CONTENTS"));
 				cOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				cOne.setReviewNo(rset.getInt("REVIEW_NO"));
 				cOne.setDriverId(rset.getString("DRIVER_ID"));
@@ -124,7 +125,7 @@ public class CommentDAO {
 	public int insertComment(Connection conn, String commentContents, String customerId, String driverId, int reviewNo) {
 		   PreparedStatement pstmt = null;
 		   int result = 0;
-		   String query = "INSERT INTO COMMENTS VALUES(COMMENTS_NUM.NEXTVAL,SYSDATE,?,?,?,?)";
+		   String query = "INSERT INTO COMMENTS VALUES(COMMENTS_NUM.NEXTVAL,?,SYSDATE,?,?,?)";
 		   try {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, commentContents);
@@ -140,5 +141,38 @@ public class CommentDAO {
 		   return result;
 	   }
 
+	
+	
+	public int deleteComment(Connection conn, int commentNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "DELETE FROM COMMENTS WHERE COMMENT_NO = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, commentNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
+	public int deleteAllComment(Connection conn, int reviewNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "DELETE FROM COMMENTS WHERE REVIEW_NO = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, reviewNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
 	
 }

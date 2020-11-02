@@ -49,12 +49,12 @@ public class ReviewService {
 		return review;
 	}
 	
-	public int insertReview(String subject, String contents, String customerId, String area) {
+	public int insertReview(String subject, String contents, String customerId, String area, int packageCode) {
 		Connection conn = null;
 		int result = 0;
 		try {
 			conn = factory.createConnection();
-			result = new ReviewDAO().insertReview(conn, subject, contents, customerId, area);
+			result = new ReviewDAO().insertReview(conn, subject, contents, customerId, area, packageCode);
 		}catch(SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -191,6 +191,14 @@ li:hover {
 </style>
 </head>
 <body>
+	<c:choose>	
+		<c:when test="${sessionScope.customer eq null && sessionScope.driver eq null }">
+    		<script>
+    			alert('로그인 하신 후에 이용 가능한 페이지입니다. \n 로그인 후 이용해주세요.');
+    			location.href='/index.jsp';
+    		</script>
+    	</c:when>
+		<c:otherwise>
 	<header>
 		<div id="main">
 			<div id="title"></div>
@@ -282,7 +290,9 @@ li:hover {
 	<footer>
 		<span id="copyright">Copyright 2020 CLOUD All rights reserved</span>
 	</footer>
-
+	</c:otherwise>
+	</c:choose>
+	
 </body>
 
 </html>

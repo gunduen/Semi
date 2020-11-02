@@ -11,6 +11,7 @@ import common.JDBCTemplate;
 
 public class CommentService {
 
+	
 	private JDBCTemplate factory;
 
 	public CommentService() {
@@ -42,6 +43,35 @@ public class CommentService {
 		try {
 			conn = factory.createConnection();
 			result = new CommentDAO().insertComment(conn, commentContents, customerId, driverId, reviewNo);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	
+	public int deleteComment(int commentNo) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = factory.createConnection();
+			result = new CommentDAO().deleteComment(conn, commentNo);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int deleteAllComment(int reviewNo) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = factory.createConnection();
+			result = new CommentDAO().deleteAllComment(conn, reviewNo);
 		}catch(SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -36,6 +36,7 @@
 		<th>회원 강제 탈퇴</th>
 	</tr>
 	<c:forEach items="${ CList }" var="customerList">
+	 <c:if test="${customerList.adminCheck ne 1}"> <!--adminCheck 0인사람만 출력 -->
 	 <tr>
 	 	<td>${ customerList.customer_Id }</td>
 	 	<td>${ customerList.customer_Name }</td>
@@ -43,6 +44,7 @@
 	 	<td>${ customerList.customer_Email }</td>
 	 	<td>${ customerList.customer_Rrn }</td>
 	 	<td><form action="/customer/kickout?customer_Id=${customerList.customer_Id}" method="post" onsubmit="return kickOutChk();"><input type="submit" value="회원 탈퇴"></form></td>
+	 </c:if>
 	 </c:forEach>
 </table>
 </body>
