@@ -485,5 +485,47 @@ public class DriverDAO {
 		   
 		   return result;
 	   }
+	   
+	   public ArrayList<Driver> autoMyInfo(Connection conn, String area){
+		   ArrayList<Driver> list = null;
+		   Driver driver = null;
+		   PreparedStatement pstmt = null;
+		   ResultSet rset = null;
+		   String query = "SELECT * FROM DRIVER WHERE DRIVER_CHECK=1 AND DRIVER_AREA=?";
+		   
+		   try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, area);
+			rset = pstmt.executeQuery();
+			if(rset!=null) {
+				list = new ArrayList<Driver>();
+				while(rset.next()) {
+					driver = new Driver();
+					driver.setDriverId(rset.getString("driver_Id"));
+					driver.setDriverPwd(rset.getString("driver_Pwd"));
+					driver.setDriverName(rset.getString("driver_Name"));
+					driver.setDriverPhone(rset.getString("driver_Phone"));
+					driver.setDriverEmail(rset.getString("driver_Email"));
+					driver.setDriverHome(rset.getString("driver_Home"));
+					driver.setDriverRrn(rset.getString("driver_Rrn"));
+					driver.setDriverCheck(rset.getString("driver_Check").charAt(0));
+					driver.setDriverSelfInfo(rset.getString("driver_SelfIntro"));
+					driver.setDriverLicense(rset.getString("driver_License"));
+					driver.setDriverBLicense(rset.getString("driver_bLicense"));
+					driver.setDriverInfoImage(rset.getString("driver_InfoImage"));
+					driver.setDriverArea(rset.getString("driver_Area"));
+					list.add(driver);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		   
+		   return list;
+	   }
 	
 }

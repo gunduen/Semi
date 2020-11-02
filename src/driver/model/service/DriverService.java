@@ -246,4 +246,20 @@ public class DriverService {
 		}
 		return result;
 	}
+	
+	public ArrayList<Driver> autoMyInfo(String area){
+		ArrayList<Driver> list = null;
+		Connection conn = null;
+		
+		try {
+			conn = factory.createConnection();
+			list = new DriverDAO().autoMyInfo(conn, area);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return list;
+	}
 }
