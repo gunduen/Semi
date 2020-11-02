@@ -92,12 +92,25 @@
         	</c:if>
         	<!-- 관리자인지 확인  -->
         	<c:if test="${ sessionScope.customer.adminCheck == 1 }">
-        	<form action="/qna/qnaReplyWrite.jsp?qnaNo=${content.qnaNoticeNo }" method="post">
+        	<form action="/qna/qnaReplyWrite.jsp" method="post">
         		<input name = qnaNoticeNo type="hidden" value=${content.qnaNoticeNo }>
+        		<input name ="replyCheck" type="hidden" value="complete">
         		<input type="submit" value="답변등록">
+        		</form>
+        		
+        		<form action="/qna/replyupdateform?qnaNo=${content.qnaNoticeNo }" method="post">
+        		<input name = qnaNoticeNo type="hidden" value=${content.qnaNoticeNo }>
+        		<input type="submit" value="답변수정">
+        		</form>
+        		
+        		<form action="/qna/replydelete?qnaNo=${content.qnaNoticeNo }" method="post">
+        		<input name = qnaNoticeNo type="hidden" value=${content.qnaNoticeNo }>
+        		<input name ="replyCheck" type="hidden" value="wait">
+        		<input type="submit" value="답변삭제">
+        		</form>
+        		
         		<a href="/qna/updateform?qnaNo=${content.qnaNoticeNo }"><input type="button" value="수정"></a>
         		<a href="/qna/delete?qnaNo=${content.qnaNoticeNo }"><input type="button" value="삭제" onclick="return del();"></a>
-        		</form>
         	</c:if>
             <a href="/qna/list"><input type="button" value="목록으로"></a>
         </article>

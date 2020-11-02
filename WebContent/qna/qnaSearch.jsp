@@ -58,18 +58,24 @@
                 <tr>
                     <th>글번호</th>
                     <th>제목</th>
-                    <th>작성자(고객)</th>
-                    <th>작성자(기사)</th>
+                    <th>작성자</th>
                     <th>작성일</th>
                     <th>조회수</th>
                     <th>답변여부</th>
                 </tr>
-                <c:forEach items="${qList }" var="qna"  >
+                <c:forEach items="${qList }" var="qna"  varStatus="status" >
                 	<tr id="qna" onClick="location.href='/qna/detail?qnaNoticeNo=${qna.qnaNoticeNo }'">
-                		<td>${qna.qnaNoticeNo }</td>
+                		<%-- <td>${qna.qnaNoticeNo }</td> --%>
+                		<td>${pageNum - status.index }</td>
                 		<td>${qna.qnaNoticeSubject }</td>
-                		<td>${qna.customerId }</td>
-						<td>${qna.driverId }</td>
+                		<c:choose>
+                			<c:when test="${qna.customerId ne null }">
+                				<td>${qna.customerId }</td>
+                			</c:when>
+                			<c:otherwise>
+                				<td>${qna.driverId }</td>
+                			</c:otherwise>
+                		</c:choose>
                 		<td>${qna.qnaNoticeDate }</td>
                 		<td>${qna.qnaNoticeHits }</td>
                 		<td>${qna.qnaNoticeCheck }</td>
@@ -89,20 +95,10 @@
         <article>
         <form action="/qna/search" method="get">
             <select id="type" name="type">
-<!--                 <option value="QNANOTICE_SUBJECTS">제목</option>
+           		<option value="QNANOTICE_SUBJECTS">제목</option>
                 <option value="QNANOTICE_CONTENTS">내용</option>
                 <option value="CUSTOMER_ID">작성자</option>
-                <option value="QNANOTICE_NO">글번호</option> -->
-                <option>제목</option>
-                <option>내용</option>
-                <option>작성자</option>
-                <option>글번호</option>
              </select>
-             <!--<c:forEach items="qList">
-             	<select>
-             		<option value="${qna}">${qna}</option>
-             	</select>
-              </c:forEach>-->
             <input type="text" name="search" size="50" placeholder="검색어를 입력하세요">
             <input type="submit" value="검색">
             </form>
