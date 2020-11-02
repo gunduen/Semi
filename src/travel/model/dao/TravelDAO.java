@@ -37,6 +37,22 @@ public class TravelDAO {
 		}
 		return result;
 	}
+	public int insertBaseTravel(Connection conn,String Driver_Id,String Driver_Name) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "INSERT INTO TRAVEL VALUES(SEQ_TRAVEL.NEXTVAL,'1','1','1',SYSDATE,'1','1','admin',?,?,'1','1')";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, Driver_Name);
+			pstmt.setString(2, Driver_Id);
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
 	public ArrayList<Driver> selectList(Connection conn,String sido,String packageDate){
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;

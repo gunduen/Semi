@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +71,10 @@ public class DriverEnrollServlet extends HttpServlet {
 	      
 	      //
 	      //
-	      
+	      String Driver_Name = multi.getParameter("userName");
+	      String Driver_Id = multi.getParameter("userId");
+	      System.out.println(Driver_Name);
+	      System.out.println(Driver_Id);
 	      Driver driver = new Driver();
 	      driver.setDriverId(multi.getParameter("userId"));
 	      driver.setDriverPwd(multi.getParameter("userPwd"));
@@ -91,8 +95,13 @@ public class DriverEnrollServlet extends HttpServlet {
 	      result = new DriverService().insertDriver(driver);
 		
 	      if(result>0) {
-	    	  out.println("<script>alert('회원가입에 성공하였습니다.'); document.location.href='/index.jsp';</script>");
-			
+//	    	  out.println("<script>alert('회원가입에 성공하였습니다.'); document.location.href='/index.jsp';</script>");
+	    	  System.out.println(Driver_Name);
+		      System.out.println(Driver_Id);
+		      request.setAttribute("Driver_Name", Driver_Name);
+		      request.setAttribute("Driver_Id", Driver_Id);
+		      RequestDispatcher view = request.getRequestDispatcher("/travel/base");
+		      view.forward(request, response);
 	      }else {
 	    	  out.println("<script>alert('회원가입에 실패하셨어요');");
 	    	  out.println("history.back();</script>");
