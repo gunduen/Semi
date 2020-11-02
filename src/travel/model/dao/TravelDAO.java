@@ -61,8 +61,9 @@ public class TravelDAO {
 		
 		try {
 			pstmt=conn.prepareStatement(query);
-			pstmt.setString(1, sido);
-			pstmt.setString(2, packageDate);
+			pstmt.setString(1, packageDate);
+			pstmt.setString(2, sido);
+			
 			rset=pstmt.executeQuery();
 			tList = new ArrayList<Driver>();
 			while(rset.next()) {
@@ -79,6 +80,7 @@ public class TravelDAO {
 		}
 		return tList;
 	}
+	
 	public ArrayList<Travel> selectTravelList(Connection conn,String customerId) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -112,6 +114,7 @@ public class TravelDAO {
 		}
 		return rList;
 	}
+	
 	public ArrayList<Travel> selctMyTravel(Connection conn,int packageCode){
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;

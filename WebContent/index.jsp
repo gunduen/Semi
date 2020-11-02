@@ -107,7 +107,7 @@
             		<a href="/admin/driverList"><input type="button" value="마이페이지"></a>
             	</c:when>
             	<c:otherwise>
-            		<a href="/myPage/MyPage.jsp"><input type="button" value="마이페이지"></a>
+            		<a href="/mypage/travel?customerId=${sessionScope.customer.customer_Id }"><input type="button" value="마이페이지"></a>
             	</c:otherwise>
             </c:choose>
         	    <!-- <a href="/myPage/MyPage.jsp"><input type="button" value="마이페이지"></a> -->
