@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import customer.model.vo.Customer;
 import review.model.service.ReviewService;
+import travel.model.service.TravelService;
 
 /**
  * Servlet implementation class ReviewInsertServlet
@@ -34,14 +35,21 @@ public class ReviewInsertServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String subject = request.getParameter("subject");
+		System.out.println(subject);
 		String contents = request.getParameter("contents");
+		System.out.println(contents);
 		String area = request.getParameter("area");
+		System.out.println(area);
+		int packageCode = Integer.parseInt(request.getParameter("packageCode"));
+		System.out.println(packageCode);
+		
 		HttpSession session  = request.getSession();
 		if (session != null && (session.getAttribute("customer") != null)) {
 			String customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
-			int result = new ReviewService().insertReview(subject, contents, customerId, area);
+			System.out.println(customerId);
+			int result = new ReviewService().insertReview(subject, contents, customerId, area, packageCode);
 			if (result > 0) {
-				response.sendRedirect("/review/list?reviewArea=서울");
+				response.sendRedirect("/review/list?reviewArea="+area);
 			} else {
 				RequestDispatcher view = request.getRequestDispatcher("/review/reviewError.html");
 				view.forward(request, response);

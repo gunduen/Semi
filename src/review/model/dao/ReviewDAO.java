@@ -35,6 +35,7 @@ public class ReviewDAO {
 				reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+				reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 				RList.add(reviewOne);
 			}
 		} catch(SQLException e) {
@@ -141,6 +142,7 @@ public class ReviewDAO {
 				   reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				   reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				   reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+				   reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 			   }
 		   }catch (SQLException e) {
 			   e.printStackTrace();
@@ -151,16 +153,17 @@ public class ReviewDAO {
 		   return reviewOne;
 	   }
 	   
-	   public int insertReview(Connection conn, String subject, String content, String customerId, String area) {
+	   public int insertReview(Connection conn, String subject, String content, String customerId, String area, int packageCode) {
 		   PreparedStatement pstmt = null;
 		   int result = 0;
-		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,0,SYSDATE,?,?)";
+		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,0,SYSDATE,?,?,?)";
 		   try {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, subject);
 			   pstmt.setString(2, content);
-			   pstmt.setString(3, area);
-			   pstmt.setString(4, customerId);
+			   pstmt.setString(3, customerId);
+			   pstmt.setString(4, area);
+			   pstmt.setInt(5, packageCode);
 			   result = pstmt.executeUpdate();
 		   } catch (SQLException e) {
 			   e.printStackTrace();
@@ -208,7 +211,7 @@ public class ReviewDAO {
 		   PreparedStatement pstmt = null;
 			ResultSet rset = null;
 			ArrayList<Review> RList = null;
-			String query = "SELECT DISTINCT REVIEW_NO FROM REVIEW WHERE CUSTOMER_ID =?" ;
+			String query = "SELECT REVIEW_NO FROM REVIEW WHERE CUSTOMER_ID =?" ;
 			try {
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, customerId);
@@ -217,12 +220,13 @@ public class ReviewDAO {
 				while(rset.next()) {
 					Review reviewOne = new Review();
 					reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
-					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
-					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
-					reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
-					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
-					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
-					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+//					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
+//					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
+//					reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
+//					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
+//					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
+//					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+//					reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 					RList.add(reviewOne);
 				}
 			} catch(SQLException e) {
@@ -234,4 +238,6 @@ public class ReviewDAO {
 			
 			return RList;
 	   }
+
+	
 }

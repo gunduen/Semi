@@ -77,9 +77,10 @@ public class ReviewListServlet extends HttpServlet {
 			}
 			PageData pageData = new ReviewService().reviewList(currentPage, area);
 			ArrayList<Review> RList = pageData.getPageList();
-//			System.out.println(customerId);
+			System.out.println(customerId);
 			ArrayList<Travel> TList = new TravelService().selectTravelList(customerId);
-//			System.out.println(TList.size());
+			System.out.println(TList.size());
+			System.out.println(RList.size());
 
 			if(!RList.isEmpty()) {
 				request.setAttribute("RList", RList);
@@ -90,7 +91,11 @@ public class ReviewListServlet extends HttpServlet {
 				RequestDispatcher view = request.getRequestDispatcher("/review/reviewList.jsp");
 				view.forward(request, response);
 			} else {
-				response.sendRedirect("/review/reviewList.jsp");
+				if (!TList.isEmpty()) {
+					request.setAttribute("rTravel", TList);
+				}System.out.println(TList);
+				RequestDispatcher view = request.getRequestDispatcher("/review/reviewList.jsp");
+				view.forward(request, response);
 			}	
 	}
 
