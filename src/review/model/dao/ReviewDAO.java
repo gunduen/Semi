@@ -161,8 +161,8 @@ public class ReviewDAO {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, subject);
 			   pstmt.setString(2, content);
-			   pstmt.setString(3, area);
-			   pstmt.setString(4, customerId);
+			   pstmt.setString(3, customerId);
+			   pstmt.setString(4, area);
 			   pstmt.setInt(5, packageCode);
 			   result = pstmt.executeUpdate();
 		   } catch (SQLException e) {
@@ -207,18 +207,20 @@ public class ReviewDAO {
 		   return result;
 	   }
 	   
-	   public ArrayList<Review> reviewBeList(Connection conn, String customerId) {
+	   public ArrayList<Review> reviewBeList(Connection conn, String customerId, int num) {
 		   PreparedStatement pstmt = null;
 			ResultSet rset = null;
 			ArrayList<Review> RList = null;
-			String query = "SELECT DISTINCT REVIEW_NO FROM REVIEW WHERE CUSTOMER_ID =?" ;
+			String query = "SELECT * FROM REVIEW WHERE CUSTOMER_ID =? AND REVIEW_NO =?" ;
 			try {
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, customerId);
+				pstmt.setInt(2, num);
 				rset = pstmt.executeQuery();
 				RList = new ArrayList<Review>();
 				while(rset.next()) {
 					Review reviewOne = new Review();
+					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 					reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
 					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
 					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
@@ -226,6 +228,7 @@ public class ReviewDAO {
 					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+					reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
 					RList.add(reviewOne);
 				}
 			} catch(SQLException e) {
@@ -238,5 +241,36 @@ public class ReviewDAO {
 			return RList;
 	   }
 
-	
+	   public ArrayList<Review> reviewBeList(Connection conn, String customerId) {
+		   PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			ArrayList<Review> RList = null;
+			String query = "SELECT * FROM REVIEW WHERE CUSTOMER_ID =?" ;
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, customerId);
+				rset = pstmt.executeQuery();
+				RList = new ArrayList<Review>();
+				while(rset.next()) {
+					Review reviewOne = new Review();
+					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
+					reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
+					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
+					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
+					reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
+					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
+					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
+					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
+					reviewOne.setPackageCode(rset.getInt("PACKAGE_CODE"));
+					RList.add(reviewOne);
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			} finally {
+				JDBCTemplate.close(rset);
+				JDBCTemplate.close(pstmt);
+			}
+			
+			return RList;
+	   }
 }

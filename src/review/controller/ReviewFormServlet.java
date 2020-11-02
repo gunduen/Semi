@@ -42,9 +42,10 @@ public class ReviewFormServlet extends HttpServlet {
 //		review.setReviewSubject(request.getParameter("reviewSubject"));
 //		review.setReviewContents(request.getParameter("reviewContents"));
 //		review.setReviewArea(request.getParameter("reviewArea"));
-//		
 		HttpSession session = request.getSession();
 		String customerId = null;
+		ArrayList<Review> reviewList = null;
+		int num = 0;
 		
 		if (session.getAttribute("customer")!=null) {
 			customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
@@ -53,13 +54,33 @@ public class ReviewFormServlet extends HttpServlet {
 		} else {
 			customerId = null;
 		}
+		
+		if (request.getParameter("reviewNo") != null) {
+			num = Integer.parseInt(request.getParameter("reviewNo"));
+			reviewList = new ReviewService().reviewBeList(customerId, num);
+			System.out.println(num);
+		}else {
+			reviewList = new ReviewService().reviewBeList(customerId, num);
+			System.out.println(num);
+		}
+		
 		ArrayList<Travel> TList = new TravelService().selectTravelList(customerId);
-		ArrayList<Review> RList = new ReviewService().reviewBeList(customerId);
+		System.out.println(num);
+		
+		System.out.println(TList);
+		System.out.println(reviewList);
 		
 		if (!TList.isEmpty()) {
+			System.out.println(num);
 			request.setAttribute("rTravel", TList);
-			request.setAttribute("RList", RList);
-			request.getRequestDispatcher("/review/reviewForm.jsp").forward(request, response);
+			request.setAttribute("RList", reviewList);
+			if (reviewList.size() == TList.size()) {
+				request.setAttribute("checkReview", false);
+				System.out.println(customerId + num);
+				request.getRequestDispatcher("/review/reviewList.jsp").forward(request, response);
+			}else {
+				request.getRequestDispatcher("/review/reviewForm.jsp").forward(request, response);
+			}
 		} else {
 			request.getRequestDispatcher("/review/reviewError.html");
 		}

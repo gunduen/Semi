@@ -79,7 +79,8 @@ public class ReviewListServlet extends HttpServlet {
 			ArrayList<Review> RList = pageData.getPageList();
 			System.out.println(customerId);
 			ArrayList<Travel> TList = new TravelService().selectTravelList(customerId);
-			System.out.println(TList);
+//			System.out.println(TList.size());
+//			System.out.println(RList.size());
 
 			if(!RList.isEmpty()) {
 				request.setAttribute("RList", RList);

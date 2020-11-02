@@ -11,7 +11,6 @@ public class Comment {
 	private int reviewNo;
 	private String driverId;
 	
-	
 	public Comment() {}
 
 	public int getCommentNo() {

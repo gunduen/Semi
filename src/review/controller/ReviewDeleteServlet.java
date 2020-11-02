@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import comment.model.service.CommentService;
 import review.model.service.ReviewService;
 
 /**
@@ -32,8 +31,7 @@ public class ReviewDeleteServlet extends HttpServlet {
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
 		String reviewArea = request.getParameter("reviewArea");
 		int result = new ReviewService().deleteReview(reviewNo);
-		int comresult = new CommentService().deleteAllComment(reviewNo);
-		if (result > 0 && comresult >0) {
+		if (result > 0) {
 			response.sendRedirect("/review/list?reviewArea="+reviewArea);
 		} else {
 			request.getRequestDispatcher("/review/reviewError.html");

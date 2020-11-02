@@ -3,30 +3,31 @@ package review.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import comment.model.service.CommentService;
-import comment.model.vo.Comment;
-import comment.model.vo.PageData;
+import customer.model.vo.Customer;
+import driver.model.vo.Driver;
 import review.model.service.ReviewService;
 import review.model.vo.Review;
+import travel.model.service.TravelService;
+import travel.model.vo.Travel;
 
 /**
- * Servlet implementation class ReviewDetailServlet
+ * Servlet implementation class ReviewModifyForm
  */
-@WebServlet("/review/select")
-public class ReviewDetailServlet extends HttpServlet {
+@WebServlet("/review/modifyForm")
+public class ReviewModifyForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReviewDetailServlet() {
+    public ReviewModifyForm() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,30 +36,24 @@ public class ReviewDetailServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
-		Review review = new ReviewService().selectReview(reviewNo);
-		System.out.println(review);
-		int currentPage = 0;
-		
-		if(request.getParameter("currnetPage") == null) {
-			currentPage = 1;
+		HttpSession session = request.getSession();
+		String customerId = null;
+		if (session.getAttribute("customer")!=null) {
+			customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
+		} else if (session.getAttribute("driver") != null) {
+			customerId = ((Driver)session.getAttribute("driver")).getDriverId();
 		} else {
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			customerId = null;
 		}
-		PageData pageData = new CommentService().commentList(currentPage, reviewNo);
-		ArrayList<Comment> CList = pageData.getPageList();
-		System.out.println(CList);
-
-		if (review != null) {
+		Review review = new ReviewService().selectReview(reviewNo);
+		ArrayList<Travel> travelList = new TravelService().selectTravelList(customerId);
+		if ( review != null ) {
 			request.setAttribute("review", review);
-			if(!CList.isEmpty()) {
-				request.setAttribute("CList", CList);
-				request.setAttribute("pageNavi", pageData.getPageNavi());
-			}
-			RequestDispatcher reviewView = request.getRequestDispatcher("/review/reviewDetail.jsp");
-			reviewView.forward(request, response);
-		} else {
-			request.getRequestDispatcher("/review/reviewError.html");
+			request.setAttribute("travelList", travelList);
+			request.getRequestDispatcher("/review/reviewModifyForm.jsp").forward(request, response);
+			
 		}
 	}
 

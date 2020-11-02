@@ -95,6 +95,20 @@ public class ReviewService {
 		return result;
 	}
 	
+	public ArrayList<Review> reviewBeList(String customerId, int num) {
+		Connection conn = null;
+		ArrayList<Review> RList = null;
+		try {
+			conn = factory.createConnection();
+			RList = new ReviewDAO().reviewBeList(conn, customerId, num);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return RList;
+	}
+	
 	public ArrayList<Review> reviewBeList(String customerId) {
 		Connection conn = null;
 		ArrayList<Review> RList = null;

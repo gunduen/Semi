@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import customer.model.vo.Customer;
 import review.model.service.ReviewService;
+import travel.model.service.TravelService;
 
 /**
  * Servlet implementation class ReviewInsertServlet
@@ -34,19 +35,33 @@ public class ReviewInsertServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String subject = request.getParameter("subject");
+		System.out.println(subject);
 		String contents = request.getParameter("contents");
+		System.out.println(contents);
 		String area = request.getParameter("area");
+		System.out.println(area);
 		int packageCode = Integer.parseInt(request.getParameter("packageCode"));
+		System.out.println(packageCode);
+		
+		int confirm = Integer.parseInt(request.getParameter("confirm"));
+		
 		HttpSession session  = request.getSession();
 		if (session != null && (session.getAttribute("customer") != null)) {
 			String customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
 			System.out.println(customerId);
+			if (confirm == 2) {
 			int result = new ReviewService().insertReview(subject, contents, customerId, area, packageCode);
 			if (result > 0) {
-				response.sendRedirect("/review/list?reviewArea=서울");
+				int resulta = new TravelService().updateTravel(packageCode); // traveldao (reviewCheck) = y/n 추가 해서 와이이면 리뷰작성 , 엔이면 리뷰 안작성
+				if (resulta >0) {
+					response.sendRedirect("/review/list?reviewArea="+area);
+				}
 			} else {
 				RequestDispatcher view = request.getRequestDispatcher("/review/reviewError.html");
 				view.forward(request, response);
+			}
+			} else {
+				response.sendRedirect("/review/reviewError.html");
 			}
 		} else {
 			RequestDispatcher view = request.getRequestDispatcher("/login/loginError.html");
