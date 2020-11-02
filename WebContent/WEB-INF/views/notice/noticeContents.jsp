@@ -49,7 +49,7 @@
     <body>
         <header><h1>header</h1></header>
         <section>
-            <article><h1 id="notice">공지사항</h1></article>
+            <article><h1 id="notice" onClick="location.href='/notice/list'" style="font-size: 30px;">공지사항</h1></article>
                 <div id="top">
                     <div class="topside" style="width:60%;font-size: 1.2em;background-color: lightgray">제목 : ${ content.notice_Subject }</div>
                     <div class="topside" style="width:20%;font-size: 0.8em;">작성자 : ${ content.customer_Id }</div>
@@ -63,7 +63,7 @@
                 	<a href="/notice/updateform?notice_No=${ content.notice_No }"><input class="btn" type="button" value="수정"></a>
                 	<a href="/notice/delete?notice_No=${ content.notice_No }" onclick="return question();"><input class="btn" type="button" value="삭제"></a>
                 </c:if>
-                <input class="btn" type="button" value="목록으로" onClick="location.href='/notice/list'">
+                <input class="btn" type="button" value="목록으로" onClick="location.href='/notice/list'">  <!-- onclick="location.href='/notice/select'" -->
             </article>
         </section>
         <footer>

@@ -44,6 +44,7 @@ public class AdminCustomerListServlet extends HttpServlet {
 		PageData pageData = new CustomerService().adminCustomerList(currentPage);
 		ArrayList<Customer> CList = pageData.getCpageList();
 		
+		
 		if(!CList.isEmpty()) {
 			request.setAttribute("CList", CList);
 			request.setAttribute("pageNavi", pageData.getPageNavi());

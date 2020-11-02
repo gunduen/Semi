@@ -31,8 +31,8 @@
             <article id="top">공지사항 작성
 	            <form action="/notice/write" method="post">
 	                <fieldset>
-	                    <input type="text" size="100" placeholder="제목을 작성하세요" name="notice_Subject"><br><br>
-	                    <textarea rows="10" cols="100" placeholder="내용을 작성하세요" name="notice_Contents"></textarea><br>
+	                    <input type="text" size="140" placeholder="제목을 작성하세요" name="notice_Subject"><br><br>
+	                    <textarea rows="20" style="resize:none" cols="130" placeholder="내용을 작성하세요" name="notice_Contents"></textarea><br>
 	                    <div id="bottom">
 		                    <input type="submit" value="업로드">
 		                    <input type="reset" value="취소">

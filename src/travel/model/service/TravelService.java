@@ -35,6 +35,25 @@ public class TravelService {
 		}
 		return result;
 	}
+	public int insertBaseTravel(String Driver_Id,String Driver_Name) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = factory.createConnection();
+			result = new TravelDAO().insertBaseTravel(conn,Driver_Id,Driver_Name);
+		}catch(SQLException e) {
+			e.printStackTrace();
+			
+			if(result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		}finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
 	public ArrayList<Driver> selectList(String sido,String packageDate){
 		Connection conn = null;
 		ArrayList<Driver> tList = null;

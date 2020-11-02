@@ -15,16 +15,16 @@ import notice.model.vo.Notice;
 import notice.model.vo.PageData;
 
 /**
- * Servlet implementation class NoticeListServlet
+ * Servlet implementation class NoticeSearchServlet
  */
-@WebServlet("/notice/list")
-public class NoticeListServlet extends HttpServlet {
+@WebServlet("/notice/search")
+public class NoticeSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NoticeListServlet() {
+    public NoticeSearchServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,8 +33,9 @@ public class NoticeListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		int currentPage = 0;
-		if ( request.getParameter("currentPage") == null )
+		if( request.getParameter("currentPage") == null)
 		{
 			currentPage = 1;
 		}
@@ -42,10 +43,11 @@ public class NoticeListServlet extends HttpServlet {
 		{
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 		}
-		PageData pageData = new NoticeService().selectList(currentPage);
+		String search = request.getParameter("search");
+		PageData pageData = new NoticeService().noticeSearchList(search, currentPage);
 		ArrayList<Notice> nList = pageData.getPageList();
 		int pageNum = pageData.getTotalCount() - (currentPage - 1)*pageData.getRecordCountPerPage();
-		if(!nList.isEmpty())
+		if( !nList.isEmpty() )
 		{
 			request.setAttribute("nList", nList);
 			request.setAttribute("pageNavi", pageData.getPageNavi());
@@ -54,7 +56,7 @@ public class NoticeListServlet extends HttpServlet {
 			view.forward(request, response);
 		}
 		else
-		{	// 서비스 요청이 실패했을 때
+		{
 			request.getRequestDispatcher("/WEB-INF/views/notice/noticeError.html").forward(request, response);
 		}
 	}

@@ -204,4 +204,46 @@ public class DriverService {
 		}
 		return pd;
 	}
+	
+	public int approveDriver(String userId) {
+		Connection conn = null;
+		int result = 0;
+		
+		try {
+			conn = factory.createConnection();
+			result = new DriverDAO().approveDriver(conn, userId);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int kickOut(String userId) {
+		int result = 0;
+		Connection conn = null;
+		
+		try {
+			conn = factory.createConnection();
+			result = new DriverDAO().kickOut(conn, userId);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
 }

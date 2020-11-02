@@ -20,20 +20,17 @@ public class NoticeService
 	public PageData selectList(int currentPage)
 	{
 		ArrayList<Notice> noticeList = null;
-		// finally에서 conn을 닫아야 하고
-		// 메소드 내에서 전역변수로 쓸 수 있도록 Connection conn을 선언
 		Connection conn = null;
-		int recordCountPerPage = 5;
-		int naviCountPerPage = 5;
+		int recordCountPerPage = 10;
+		int naviCountPerPage = 10;
 		PageData pd = new PageData();
 		try 
 		{
 			conn = factory.createConnection();
-			// setPageList() 메소드는 10개의 게시물을 저장
 			pd.setPageList(new NoticeDAO().selectList(conn, currentPage, recordCountPerPage));
-			// setPageNavi() 메소드는 a링크 10개를 저장
 			pd.setPageNavi(new NoticeDAO().getPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage));
-			// noticeList = new NoticeDAO().selectList(conn);
+			pd.setTotalCount(new NoticeDAO().totalCount(conn));
+			pd.setRecordCountPerPage(recordCountPerPage);
 		} 
 		catch (SQLException e)
 		{
@@ -66,16 +63,59 @@ public class NoticeService
 		return notice;
 	}
 	
+	public int plusHits(int notice_No)
+	{
+		int result = 0;
+		Connection conn = null;
+		try
+		{
+			conn = factory.createConnection();
+			result = new NoticeDAO().plusHits(conn, notice_No);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public PageData noticeSearchList(String search, int currentPage)
+	{
+		Connection conn = null;
+		int recordCountPerPage = 10;
+		int naviCountPerPage = 10;
+		PageData pd = new PageData();
+		try
+		{
+			conn = factory.createConnection();
+			pd.setPageList(new NoticeDAO().noticeSearchList(conn, search, currentPage, recordCountPerPage));
+			pd.setPageNavi(new NoticeDAO().getSearchPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage, search));
+			pd.setTotalCount(new NoticeDAO().searchTotalCount(conn, search));
+			pd.setRecordCountPerPage(recordCountPerPage);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			JDBCTemplate.close(conn);
+		}
+		return pd;
+	}
+	
 	public int insertNotice(String notice_Subject, String notice_Contents, String customer_Id)
 	{	
 		Connection conn = null;
 		int result = 0;
 		try
-		{	// 서비스에서 DB 연결 생성
+		{	
 			conn = factory.createConnection();
-			// 생성된 연결을 DAO로 넘겨줌
 			result = new NoticeDAO().insertNotice(conn, notice_Subject, notice_Contents, customer_Id);
-			// 서비스 클래스에서 하는 역할로 commit/rollback
 			if ( result > 0 )
 			{
 				JDBCTemplate.commit(conn);
