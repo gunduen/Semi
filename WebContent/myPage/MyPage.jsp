@@ -208,13 +208,13 @@
                     <!-- if문으로 li 개수 조절 -->
                     <c:if test="${sessionScope.customer ne null}">
                     <li><a href="/mypage/travel?customerId=${sessionScope.customer.customer_Id }">예약확인/ 예약취소</a></li>
-                    <li><a href="/message/messageList.jsp">쪽지함</a></li>
+                    <li><a href="/message/messageReceiverList.jsp">쪽지함</a></li>
 					<li><a href="/customer/myInfo?customerId=${sessionScope.customer.customer_Id }">회원정보 수정</a>
 					<li><a href="/customer/delete?customerId=${sessionScope.customer.customer_Id }">회원 탈퇴</a></li>
                     </c:if>
                     <c:if test="${sessionScope.driver ne null}">
                     <li><a href="/mypage/travel?driverId=${sessionScope.driver.driverId }">예약확인/ 예약취소</a></li>
-                    <li><a href="/message/messageList.jsp">쪽지함</a></li>
+                    <li><a href="/message/messageReceiverList.jsp">쪽지함</a></li>
                     <li><a href="/login/driverMyInfo.jsp">기사 회원정보 수정</a></li> 
                     <li><a href="/driver/delete?driverId=${sessionScope.driver.driverId } ">회원 탈퇴</a></li>
                     <li><a href="#">My일정관리</a></li>

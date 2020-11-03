@@ -111,32 +111,41 @@
             header
         </div>
     </header>
-    <section>
-        <nav>
-            <ul id="menu">
-                <li><a href="/noticeList.html">공지사항</a></li>
-                <li><a href="/driverList.html">기사소개</a></li>
-                <li><a href="/reviewList.html">사용자 후기</a></li>
-                <li><a href="/qnaList.html">Q&A</a></li>
-            </ul>
-        </nav>
+	<section>
+		<nav>
+			<ul id="menu">
+				<li><a href="/noticeList.html">공지사항</a></li>
+				<li><a href="/driverList.html">기사소개</a></li>
+				<li><a href="/reviewList.html">사용자 후기</a></li>
+				<li><a href="/qnaList.html">Q&A</a></li>
+			</ul>
+		</nav>
 
-        <article class="article">
-        		
-                <div id="title">이용후기</div>
-                <hr>
-               <c:if test="${ rList eq null  }">
+		<article class="article">
+
+			<div id="title">이용후기</div>
+			<hr>
+			
 				<form action="/review/insert" method="post">
 					<div class="message title">
-						제목<input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요.">
+						제목 ${review.reviewNo } <input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요">
 					</div>
+					지역과 여행예약번호를 선택해주세요 : 
 					<select name="area">
-						<c:forEach items="${ rTravel }" var="travel">
-						지역<option value="${travel.package_Code }" selected>
-						${travel.package_Area }- '날짜 : ${ travel.package_TravelDate }'/'예약코드 ${travel.package_Code }'
-						</option>
+						<c:forEach items="${ travelList }" var="travel">
+							<option value="${travel.package_Area }" selected>${travel.package_Area }
+								- '날짜 : ${ travel.package_TravelDate }'/ ${travel.package_Code }</option>
+
 						</c:forEach>
-					</select> <input type="hidden" name="reviewNo" value="${review.reviewNo }">
+					</select>
+					<select name="packageCode">
+						<c:forEach items="${ travelList }" var="travel">
+							<option value="${travel.package_Code }" selected> 예약번호 : ${travel.package_Code }</option>
+
+						</c:forEach>
+					</select>
+
+					
 					<div class="message contents">
 						<textarea style="width: 1030px; height: 200px" name="contents" placeholder="내용을 입력해주세요"></textarea>
 					</div>
@@ -145,33 +154,12 @@
 						<input type="submit" value="등록" id="btn2">
 					</div>
 				</form>
-				</c:if>
-				<c:if test="${ rList ne null }">
-				<form action="/review/update?reviewNo='${review.reviewNo }'" method="post">
-					<div class="message title">
-						제목 <input type="text" style="width: 1000px;" name="subject" placeholder="제목을 입력해주세요.">
-					</div>
-					 <select name="area">
-					<c:forEach items="${ rTravel }" var="travel">
-					지역<option value="${travel.package_Area }">${travel.package_Area } - '날짜 : ${ travel.package_TravelDate }'</option>
-						
-					</c:forEach>
-					</select>
-					<input type="hidden" name="reviewNo" value="${review.reviewNo }">
-					
-					<div class="message contents">
-						<textarea style="width: 1030px; height: 200px" name="contents" placeholder="내용을 입력해주세요">${review.reviewContents }</textarea>
-					</div>
-					<br>
-					<div class="message update">
-						<input type="submit" value="수정" id="btn2">
-					</div>
-				</form>
-				</c:if>
-		</article>
-    </section>
+			
 
-    <footer>
+		</article>
+	</section>
+
+	<footer>
         <span id="copyright">Copyright 2020 CLOUD All rights reserved</span>
     </footer>
 </body>

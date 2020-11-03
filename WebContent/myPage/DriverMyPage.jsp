@@ -197,7 +197,7 @@
                 <nav id="navigator">
                     <!-- if문으로 li 개수 조절 -->
                     <li><a href="travelCheck.html">예약확인/ 예약취소</a></li>
-                    <li><a href="messageList.html">쪽지함</a></li>
+                    <li><a href="/message/receiverList?receiver=${ sessionScope.driver.driverId }">쪽지함</a></li>
                     <li><a href="/login/driverMyInfo.jsp">회원정보 수정</a></li> 
                     <li><a href="/driver/delete?driverId=${sessionScope.driver.driverId }">회원 탈퇴</a></li>
                     <li><a href="selectHoliday.html">My 일정관리</a></li>

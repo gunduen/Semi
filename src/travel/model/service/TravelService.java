@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import admin.model.vo.PageData;
 import common.JDBCTemplate;
+import driver.model.dao.DriverDAO;
 import driver.model.vo.Driver;
 import travel.model.dao.TravelDAO;
 import travel.model.vo.Travel;
@@ -48,6 +50,28 @@ public class TravelService {
 		}
 		return tList;
 	}
+	
+	public int insertBaseTravel(String Driver_Id,String Driver_Name) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = factory.createConnection();
+			result = new TravelDAO().insertBaseTravel(conn,Driver_Id,Driver_Name);
+		}catch(SQLException e) {
+			e.printStackTrace();
+			
+			if(result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		}finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	//jimin
 	public ArrayList<Travel> selectTravelList(String customerId) {
 		Connection conn = null;
 		ArrayList<Travel> rList = null;
@@ -61,6 +85,42 @@ public class TravelService {
 		}
 		return rList;
 	}
+	public ArrayList<Travel> selectUpdateTravelList(String customerId, int packageCode) {
+		Connection conn = null;
+		ArrayList<Travel> travelList = null;
+		try {
+			conn = factory.createConnection();
+			travelList = new TravelDAO().selectUpdateTravelList(conn,customerId, packageCode);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(conn);
+		}
+		return travelList;
+	}
+	
+	public PageData adminTravelList(int currentPage) {
+		Connection conn = null;
+		ArrayList<Travel> TravelList = null;
+		int recordCountPerPage = 10;
+		int naviCountPerPage = 10;
+		PageData pd = new PageData();
+		try {
+			conn=factory.createConnection();
+			pd.setTpageList(new TravelDAO().adminTravelList(conn, currentPage,recordCountPerPage));
+			pd.setPageNavi(new TravelDAO().getPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(conn);
+		}
+		return pd;
+	}
+	//
+	
+	
+	
 	public ArrayList<Travel> selctMyTravel(int packageCode){
 		Connection conn = null;
 		ArrayList<Travel> tdList = null;
@@ -80,6 +140,25 @@ public class TravelService {
 		try {
 			conn=factory.createConnection();
 			result=new TravelDAO().deleteTravel(conn,package_Code);
+			if(result > 0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+	
+	public int updateTravel(int packageCode) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn=factory.createConnection();
+			result=new TravelDAO().updateTravel(conn,packageCode);
 			if(result > 0) {
 				JDBCTemplate.commit(conn);
 			}else {

@@ -28,7 +28,7 @@
 		<th>기사 이름</th>
 		<th>Button</th>
 	</tr>
-	<c:forEach items="${ TList }" var="travelList">
+	<c:forEach items="${ travelList}" var="travelList">
 	 <tr>
 	 	<td>${ travelList.package_Code }</td>
 	 	<td>${ travelList.package_Area }</td>
@@ -36,10 +36,15 @@
 	 	<td>${ travelList.package_Pickup }</td>
 	 	<td>${ travelList.package_Date }</td>
 	 	<td>${ travelList.package_TravelDate }</td>
-	 	<td>${ travelList.package_Confirm }</td>
+	 	<c:if  test="${ travelList.pakcage_Confirm == 0}">
+	 	<td> 미완료 </td>
+	 	</c:if>
+	 	<c:if  test="${ travelList.pakcage_Confirm > 0}">
+	 	<td> 완료 </td>
+	 	</c:if>
 	 	<td>${ travelList.customer_Id }</td>
 	 	<td>${ travelList.driver_Name }</td>
-	 	<td><button onclick="#">예약 취소하기</button></td>
+	 	<td><button onclick="#">취소한 여행 목록에서 삭제하기</button></td>
 	 </c:forEach>
 </table>
 </body>

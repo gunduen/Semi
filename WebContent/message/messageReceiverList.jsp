@@ -64,7 +64,7 @@
 						쪽지함</a></li>
 			</ul>
 		</div>
-		<div class="title">[${ sessionScope.customer.customer_Id }]님의
+		<div class="title">[${ sessionScope.driver.driverId }]님의
 				 쪽지함입니다.</div>
 				<hr>
 	<table border="1">

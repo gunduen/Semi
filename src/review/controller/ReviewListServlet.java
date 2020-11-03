@@ -39,7 +39,7 @@ public class ReviewListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		int currentPage = 0;
+		
 		String area = request.getParameter("reviewArea");
 		HttpSession session = request.getSession();
 		
@@ -69,7 +69,8 @@ public class ReviewListServlet extends HttpServlet {
 		} else {
 			customerId = null;
 		}
-			
+		
+		int currentPage = 0;
 			if(request.getParameter("currnetPage") == null) {
 				currentPage = 1;
 			} else {
@@ -84,7 +85,7 @@ public class ReviewListServlet extends HttpServlet {
 
 			if(!RList.isEmpty()) {
 				request.setAttribute("RList", RList);
-				request.setAttribute("pageNavi", pageData.getPageNavi());
+				request.setAttribute("pageNavi", pageData.getPageNavi()); 
 				if (!TList.isEmpty()) {
 				request.setAttribute("rTravel", TList);
 				}

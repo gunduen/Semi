@@ -26,7 +26,7 @@ public class ReviewService {
 		try {
 			conn = factory.createConnection();
 			pd.setPageList(new ReviewDAO().reviewList(conn, currentPage, recordCountPerPage, area));
-			pd.setPageNavi(new ReviewDAO().getPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage));
+			pd.setPageNavi(new ReviewDAO().getPageNavi(conn, currentPage, recordCountPerPage, naviCountPerPage, area));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

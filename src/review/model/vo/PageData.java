@@ -8,6 +8,7 @@ public class PageData {
 
 	private ArrayList<Review> pageList;
 	private String pageNavi;
+	
 	public ArrayList<Review> getPageList() {
 		return pageList;
 	}

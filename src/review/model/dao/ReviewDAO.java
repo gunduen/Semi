@@ -31,7 +31,6 @@ public class ReviewDAO {
 				reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
 				reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
 				reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
-				reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
 				reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
@@ -47,7 +46,7 @@ public class ReviewDAO {
 		return RList;
 	}
 	
-	public String getPageNavi(Connection conn, int currentPage, int recordCountPerPage, int naviCountPerPage) {
+	public String getPageNavi(Connection conn, int currentPage, int recordCountPerPage, int naviCountPerPage, String area) {
 	      int recordTotalCount = totalCount(conn);
 	      int pageTotalCount = 0;
 	      if(recordTotalCount % recordCountPerPage > 0) {
@@ -85,19 +84,19 @@ public class ReviewDAO {
 	      
 	      StringBuilder sb = new StringBuilder();
 	      if(needPrev) {
-	         sb.append("<a href='/review/list?currentPage="+(startNavi-1) + "'> < </a>");
+	         sb.append("<a href='/review/list?reviewArea="+area+"&?currentPage="+(startNavi-1) + "'> < </a>");
 	      }
 	      // 1~ 10까지의 숫자를 for문을 이용해서 생성하고 만들어주는 부분
 	      for (int i = startNavi; i <= endNavi; i++) {
 	         //i가 현재 페이지일 떄, 숫자 굵게만들기 = <b></b>
 	         if(i == currentPage) {
-	            sb.append("<a href='/review/list?currentPage="+i+"'><b> " + i + " </b></a>");
+	            sb.append("<a href='/review/listreviewArea="+area+"&?currentPage="+i+"'><b> " + i + " </b></a>");
 	         } else { 
-	            sb.append("<a href='/review/list?currentPage="+i+"'> " + i + " </a>");
+	            sb.append("<a href='/review/listreviewArea="+area+"&?currentPage="+i+"'> " + i + " </a>");
 	         }
 	      }// 다음 버튼 누를 수 있을 때, 다음 버튼을 생성하는 부분
 	      if (needNext) {
-	         sb.append("<a href='/review/list?currentPage=" + (endNavi + 1) + "'> > </a>");
+	         sb.append("<a href='/review/listreviewArea="+area+"&?currentPage=" + (endNavi + 1) + "'> > </a>");
 	      }
 	      //태그를 StringBuilder의 append() 메소드를 이용해서 붙인 후에
 	      //toString() 메소드를 이용하여 String으로 만들어서 리턴
@@ -138,7 +137,6 @@ public class ReviewDAO {
 				   reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
 				   reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
 				   reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
-				   reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
 				   reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 				   reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				   reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
@@ -156,13 +154,13 @@ public class ReviewDAO {
 	   public int insertReview(Connection conn, String subject, String content, String customerId, String area, int packageCode) {
 		   PreparedStatement pstmt = null;
 		   int result = 0;
-		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,0,SYSDATE,?,?,?)";
+		   String query = "INSERT INTO REVIEW VALUES(REVIEW_NUM.NEXTVAL,?,?,SYSDATE,?,?,?)";
 		   try {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, subject);
 			   pstmt.setString(2, content);
-			   pstmt.setString(3, customerId);
-			   pstmt.setString(4, area);
+			   pstmt.setString(3, area);
+			   pstmt.setString(4, customerId);
 			   pstmt.setInt(5, packageCode);
 			   result = pstmt.executeUpdate();
 		   } catch (SQLException e) {
@@ -224,7 +222,6 @@ public class ReviewDAO {
 					reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
 					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
 					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
-					reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
 					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));
@@ -257,7 +254,6 @@ public class ReviewDAO {
 					reviewOne.setReviewNo(rset.getInt("REVIEW_NO"));
 					reviewOne.setReviewSubject(rset.getString("REVIEW_SUBJECT"));
 					reviewOne.setReviewContents(rset.getString("REVIEW_CONTENTS"));
-					reviewOne.setReviewHits(rset.getInt("REVIEW_HITS"));
 					reviewOne.setReviewDate(rset.getDate("REVIEW_DATE"));
 					reviewOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 					reviewOne.setReviewArea(rset.getString("REVIEW_AREA"));

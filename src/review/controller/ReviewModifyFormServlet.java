@@ -21,13 +21,13 @@ import travel.model.vo.Travel;
  * Servlet implementation class ReviewModifyForm
  */
 @WebServlet("/review/modifyForm")
-public class ReviewModifyForm extends HttpServlet {
+public class ReviewModifyFormServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReviewModifyForm() {
+    public ReviewModifyFormServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,8 +38,11 @@ public class ReviewModifyForm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
+		System.out.println(reviewNo);
+		
 		HttpSession session = request.getSession();
 		String customerId = null;
+		
 		if (session.getAttribute("customer")!=null) {
 			customerId = ((Customer)session.getAttribute("customer")).getCustomer_Id();
 		} else if (session.getAttribute("driver") != null) {
@@ -47,13 +50,18 @@ public class ReviewModifyForm extends HttpServlet {
 		} else {
 			customerId = null;
 		}
+		
 		Review review = new ReviewService().selectReview(reviewNo);
-		ArrayList<Travel> travelList = new TravelService().selectTravelList(customerId);
+		int packageCode = review.getPackageCode();
+		ArrayList<Travel> travelList = new TravelService().selectUpdateTravelList(customerId,packageCode);
+		
 		if ( review != null ) {
 			request.setAttribute("review", review);
 			request.setAttribute("travelList", travelList);
 			request.getRequestDispatcher("/review/reviewModifyForm.jsp").forward(request, response);
 			
+		} else {
+			request.getRequestDispatcher("/review/reviewList.jsp").forward(request, response);
 		}
 	}
 

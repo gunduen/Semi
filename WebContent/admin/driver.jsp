@@ -55,11 +55,11 @@
 	 	<td><button type="button">승인 하기</button></td>
 	 	</c:if>
 	 </tr>
-	 <script>
+	<!--  <script>
 	 	${".image"}.mouseover(function() {
 	 		$(this).css("color","lightgray");
 	 	});
-	 </script>
+	 </script> -->
 	 </c:forEach>
 </table>
 </body>

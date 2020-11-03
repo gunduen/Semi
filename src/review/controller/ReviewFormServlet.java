@@ -64,21 +64,20 @@ public class ReviewFormServlet extends HttpServlet {
 			System.out.println(num);
 		}
 		
-		ArrayList<Travel> TList = new TravelService().selectTravelList(customerId);
+		ArrayList<Travel> travelList = new TravelService().selectTravelList(customerId);
 		System.out.println(num);
 		
-		System.out.println(TList);
+		System.out.println(travelList);
 		System.out.println(reviewList);
 		
-		if (!TList.isEmpty()) {
+		if (!travelList.isEmpty()) {
 			System.out.println(num);
-			request.setAttribute("rTravel", TList);
+			request.setAttribute("travelList", travelList);
 			request.setAttribute("RList", reviewList);
-			if (reviewList.size() == TList.size()) {
+			if (reviewList.size() == travelList.size()) {
 				request.setAttribute("checkReview", false);
-				System.out.println(customerId + num);
 				request.getRequestDispatcher("/review/reviewList.jsp").forward(request, response);
-			}else {
+			} else {
 				request.getRequestDispatcher("/review/reviewForm.jsp").forward(request, response);
 			}
 		} else {

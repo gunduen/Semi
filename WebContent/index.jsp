@@ -101,12 +101,23 @@
                 </script>
             </div>
             <div id="header3">
-            <c:if test="${sessionScope.customer ne null }">
-        	    <!-- <a href="/myPage/MyPage.jsp"><input type="button" value="마이페이지"></a> -->
-                <a href="/mypage/travel?customerId=${sessionScope.customer.customer_Id }"><input type="button" value="마이페이지"></a>
-            </c:if>
-            <c:if test="${sessionScope.driver ne null}">
-            	<a href="/myPage/MyPage.jsp"><input type="button" value="마이페이지"></a>
+            <c:if
+					test="${sessionSceop.customer.customer_Id eq 'admin' }">
+					<a href="/admin/driverList"><input type="button" value="마이페이지"></a>
+				</c:if>
+				<c:if
+					test="${sessionSceop.customer.customer_Id ne 'admin'}">
+					<a href="/myPage/CustomerMyPage.jsp"><input type="button" value="마이페이지"></a>
+				</c:if>
+				
+				<%-- <a
+						href="/mypage/travel?customerId=${sessionScope.customer.customer_Id }"><input
+						type="button" value="마이페이지"></a>
+ --%>
+
+
+				<c:if test="${sessionScope.driver ne null}">
+            	<a href="/myPage/DriverMyPage.jsp"><input type="button" value="마이페이지"></a>
             </c:if>
             </div>
         </header>

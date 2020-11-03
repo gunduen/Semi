@@ -37,7 +37,7 @@ public class ReviewDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
 		Review review = new ReviewService().selectReview(reviewNo);
-		System.out.println(review);
+//		System.out.println(review);
 		int currentPage = 0;
 		
 		if(request.getParameter("currnetPage") == null) {
@@ -47,7 +47,7 @@ public class ReviewDetailServlet extends HttpServlet {
 		}
 		PageData pageData = new CommentService().commentList(currentPage, reviewNo);
 		ArrayList<Comment> CList = pageData.getPageList();
-		System.out.println(CList);
+//		System.out.println(CList);
 
 		if (review != null) {
 			request.setAttribute("review", review);

@@ -1,6 +1,8 @@
 package comment.controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import comment.model.service.CommentService;
 import comment.model.vo.Comment;
+import review.model.service.ReviewService;
 import review.model.vo.Review;
 import customer.model.vo.Customer;
 
@@ -37,6 +40,8 @@ public class CommentInsertServlet extends HttpServlet {
 		int reviewNo = Integer.parseInt(request.getParameter("reviewNo"));
 		String customerId = request.getParameter("customerId");
 		String driverId = request.getParameter("driverId");
+		
+		Review review = new ReviewService().selectReview(reviewNo);
 	
 		if(commentContents == null || commentContents.trim().equals("")){
 			commentContents = "0";
@@ -49,7 +54,9 @@ public class CommentInsertServlet extends HttpServlet {
 			int result = new CommentService().insertComment(commentContents, customerId, driverId, reviewNo);
 			
 			if (result > 0) {
-				response.sendRedirect("/review/select?reviewNo="+reviewNo);
+				request.setAttribute("review", review);
+				RequestDispatcher reviewView = request.getRequestDispatcher("/review/reviewDetail.jsp");
+				reviewView.forward(request, response);
 			} else {
 				request.getRequestDispatcher("/review/reviewError.html");
 			}

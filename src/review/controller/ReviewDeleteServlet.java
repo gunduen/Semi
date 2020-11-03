@@ -32,7 +32,7 @@ public class ReviewDeleteServlet extends HttpServlet {
 		String reviewArea = request.getParameter("reviewArea");
 		int result = new ReviewService().deleteReview(reviewNo);
 		if (result > 0) {
-			response.sendRedirect("/review/list?reviewArea="+reviewArea);
+			response.sendRedirect("/review/list?reviewArea=서울");
 		} else {
 			request.getRequestDispatcher("/review/reviewError.html");
 		}

@@ -29,7 +29,7 @@ public class CommentDAO {
 			while(rset.next()) {
 				Comment cOne = new Comment();
 				cOne.setCommentNo(rset.getInt("COMMENT_NO"));
-				cOne.setCommentContents(rset.getString("COMMENT_COMMENTS"));
+				cOne.setCommentContents(rset.getString("COMMENT_CONTENTS"));
 				cOne.setCommentDate(rset.getDate("COMMENT_DATE"));
 				cOne.setCustomerId(rset.getString("CUSTOMER_ID"));
 				cOne.setReviewNo(rset.getInt("REVIEW_NO"));
@@ -125,7 +125,7 @@ public class CommentDAO {
 	public int insertComment(Connection conn, String commentContents, String customerId, String driverId, int reviewNo) {
 		   PreparedStatement pstmt = null;
 		   int result = 0;
-		   String query = "INSERT INTO COMMENTS VALUES(COMMENTS_NUM.NEXTVAL,?,SYSDATE,?,?,?)";
+		   String query = "INSERT INTO COMMENTS VALUES(COMMENTS_NUM.NEXTVAL,SYSDATE,?,?,?,?)";
 		   try {
 			   pstmt = conn.prepareStatement(query);
 			   pstmt.setString(1, commentContents);

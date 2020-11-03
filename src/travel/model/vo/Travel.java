@@ -16,8 +16,17 @@ public class Travel {
 	private String driver_Id;
 	private String coordx;
 	private String coordy;
+	private String reviewYN;
 	
 	
+	public String getReviewYN() {
+		return reviewYN;
+	}
+
+
+	public void setReviewYN(String reviewYN) {
+		this.reviewYN = reviewYN;
+	}
 
 
 	public int getPakcage_Confirm() {

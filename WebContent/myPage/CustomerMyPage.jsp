@@ -230,7 +230,7 @@ li:hover {
 			<nav id="navigator">
 				<!-- if문으로 li 개수 조절 -->
 				<li><a href="/mypage/travel?customerId=${sessionScope.customer.customer_Id }">예약확인/ 예약취소</a></li>
-				<li><a href="/message/messageList.jsp">쪽지함</a></li>
+				<li><a href="/message/receiverList?receiver=${ sessionScope.customer.customer_Id }">쪽지함</a></li>
 				<li><a
 					href="/customer/myInfo?customerId=${sessionScope.customer.customer_Id }">회원정보
 						수정</a></li>

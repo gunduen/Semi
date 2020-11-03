@@ -9,7 +9,6 @@ public class Review {
 	private int reviewNo;
 	private String reviewSubject;
 	private String reviewContents;
-	private int reviewHits;
 	private Date reviewDate;
 	private String customerId;
 	private String reviewArea;
@@ -39,12 +38,7 @@ public class Review {
 	public void setReviewContents(String reviewContents) {
 		this.reviewContents = reviewContents;
 	}
-	public int getReviewHits() {
-		return reviewHits;
-	}
-	public void setReviewHits(int reviewHits) {
-		this.reviewHits = reviewHits;
-	}
+	
 	public Date getReviewDate() {
 		return reviewDate;
 	}
@@ -66,7 +60,7 @@ public class Review {
 	@Override
 	public String toString() {
 		return "Review [reviewNo=" + reviewNo + ", reviewSubject=" + reviewSubject + ", reviewContents="
-				+ reviewContents + ", reviewHits=" + reviewHits + ", reviewDate=" + reviewDate + ", customerId="
+				+ reviewContents + ", reviewDate=" + reviewDate + ", customerId="
 				+ customerId + ", reviewArea=" + reviewArea + "]";
 	}
 	

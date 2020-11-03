@@ -98,6 +98,14 @@
             list-style: none;
         }
     </style>
+    <script>
+    	window.onload = function() {
+    		var flag = '${checkReview }';
+    		if(flag != '' && flag == 'false') {
+    			alert("Review End!!");
+    		}
+    	};	
+    </script>
 </head>
 
 <body>
@@ -146,33 +154,38 @@
 					<th>게시글</th>
 					<th>지역</th>
 					<th>날짜</th>
-					<th></th>
 				</tr>
 				<c:forEach items="${ RList }" var="review">
 				
 					<%-- <tr onClick="location.href='/review/select?reviewNo=${ review.reviewNo }'"> --%>
-					<tr onclick="location.href='/review/select?reviewNo=${review.reviewNo}'">
+					<tr onclick="selnumFunc(${review.reviewNo});">
 						<td>${review.customerId }</td>
 						<td>${review.reviewSubject }</td>
 						<td>${review.reviewArea }</td>
 						<td>${review.reviewDate }</td>
 					</tr>
-					
+					<script>
+					 function selnumFunc(num) {
+						 location.href="/review/select?reviewNo="+ num;
+					 }
+					</script>
 				</c:forEach>
 				<tr>
 				<td colspan="4" align="center">${ pageNavi }
 			</tr>
 		</table>
+		<!-- 글쓰기 버튼  -->
 		${fn:length(rTravel) }
 			<c:if test="${fn:length(rTravel) == 0 }">
 			<div></div>
 			</c:if>
 			<c:if test="${fn:length(rTravel) > 0}">
 				<!-- https://okky.kr/article/187911 -->
-				
+				<c:if
+					test="${ sessionScope.customer ne null || ( sessionScope.driver ne null)}">
 					<button type="button" id="btn1"
 						onclick="location.href='/review/form'">글쓰기</button>
-				
+				</c:if>
 			</c:if>
 		</section>
     <footer>
