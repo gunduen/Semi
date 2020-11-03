@@ -102,11 +102,11 @@
             </div>
             <div id="header3">
             <c:if
-					test="${sessionSceop.customer.customer_Id eq 'admin' }">
+					test="${sessionScope.customer.adminCheck == 0 }">
 					<a href="/admin/driverList"><input type="button" value="마이페이지"></a>
 				</c:if>
 				<c:if
-					test="${sessionSceop.customer.customer_Id ne 'admin'}">
+					test="${sessionScope.customer.adminCheck > 0}">
 					<a href="/myPage/CustomerMyPage.jsp"><input type="button" value="마이페이지"></a>
 				</c:if>
 				
